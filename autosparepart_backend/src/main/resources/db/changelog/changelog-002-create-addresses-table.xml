@@ -4,8 +4,9 @@
   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                       http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-  <changeSet id="002-create-addresses-table" author="">
-    <createTable tableName="Address">
+
+  <changeSet id="002-create-addresses-table" author="Mohsen">
+    <createTable tableName="Addresses">
       <column name="address_id" type="SERIAL">
         <constraints primaryKey="true" nullable="false" />
       </column>
@@ -28,5 +29,13 @@
         <constraints nullable="false" />
       </column>
     </createTable>
+
+    <addForeignKeyConstraint
+      constraintName="address_user"
+      baseTableName="Addresses"
+      baseColumnNames="user_id"
+      referencedTableName="Users"
+      referencedColumnNames="user_id"
+      onDelete="CASCADE" />
   </changeSet>
 </databaseChangeLog>
