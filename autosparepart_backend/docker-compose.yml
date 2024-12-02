@@ -14,6 +14,25 @@ services:
       - postgres:/data/postgres
     networks:
       - gm
+  
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:26.0.6
+  #   container_name: keycloak
+  #   command:
+  #     - start-dev
+  #     # - --import-realm
+  #     # - --spi-theme-default=notifyme_theme
+  #   # env_file:
+  #   #   - .env
+  #   # depends_on:
+  #   #   - db_keycloak
+  #   environment:
+  #     - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+  #     - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+  #     - KEYCLOAK_REALM=notifyme
+  #   ports:
+  #     - "8080:8080"
+
 
 volumes:
   postgres:
