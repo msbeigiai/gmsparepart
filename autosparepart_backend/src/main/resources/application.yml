@@ -6,6 +6,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/irmazda
     username: irmazda
     password: test
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:8080/realms/irmazda"
     
   jpa:
     hibernate:
