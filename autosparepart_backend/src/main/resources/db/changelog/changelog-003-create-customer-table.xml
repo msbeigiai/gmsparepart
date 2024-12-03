@@ -5,37 +5,28 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                       http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-  <changeSet id="002-create-addresses-table" author="Mohsen">
-    <createTable tableName="addresses">
-      <column name="address_id" type="SERIAL">
+  <changeSet id="003-create-customer-table" author="Mohsen">
+    <createTable tableName="customers">
+      <column name="customer_id" type="SERIAL">
         <constraints primaryKey="true" nullable="false" />
       </column>
       <column name="user_id" type="UUID">
+        <constraints nullable="false" unique="true" />
+      </column>
+      <column name="name" type="VARCHAR(100)">
         <constraints nullable="false" />
       </column>
-      <column name="address_line1" type="TEXT">
+      <column name="phone_number" type="VARCHAR(20)">
         <constraints nullable="false" />
       </column>
-      <column name="city" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="postal_code" type="VARCHAR(20)">
-        <constraints nullable="true" />
-      </column>
-      <column name="country" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
-        <constraints nullable="false" />
-      </column>
+      <column name="total_spent" type="DECIMAL(10, 2)" defaultValueNumeric="0.00" />
+      <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
     </createTable>
 
-    <addForeignKeyConstraint
-      constraintName="fk_address_user"
-      baseTableName="addresses"
+    <addForeignKeyConstraint constraintName="fk_customer_user" baseTableName="customers"
       baseColumnNames="user_id"
-      referencedTableName="user"
-      referencedColumnNames="user_id"
+      referencedTableName="users" referencedColumnNames="user_id"
       onDelete="CASCADE" />
+
   </changeSet>
 </databaseChangeLog>

@@ -40,6 +40,8 @@ services:
 volumes:
   postgres:
     driver: local
+  keycloak_data:
+    driver: local
 
 networks:
   gm:
