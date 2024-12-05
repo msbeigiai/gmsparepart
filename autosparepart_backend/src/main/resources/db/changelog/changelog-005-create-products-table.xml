@@ -5,28 +5,31 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                       http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-  <changeSet id="003-create-customer-table" author="Mohsen">
-    <createTable tableName="customers">
-      <column name="customer_id" type="SERIAL">
+  <changeSet id="005-create-product-table" author="Mohsen">
+    <createTable tableName="products">
+      <column name="product_id" type="UUID">
         <constraints primaryKey="true" nullable="false" />
       </column>
-      <column name="user_id" type="UUID">
-        <constraints nullable="false" unique="true" />
+      <column name="category_id" type="INT">
+        <constraints nullable="false" />
       </column>
       <column name="name" type="VARCHAR(100)">
         <constraints nullable="false" />
       </column>
-      <column name="phone_number" type="VARCHAR(20)">
+      <column name="description" type="TEXT" />
+      <column name="price" type="DECIMAL(10, 2)">
         <constraints nullable="false" />
       </column>
-      <column name="total_spent" type="DECIMAL(10, 2)" defaultValueNumeric="0.00" />
+      <column name="stock_quantity" type="INT" defaultValue="0" />
       <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+      <column name="updated_at" type="TIMESTAMP" />
     </createTable>
 
-    <addForeignKeyConstraint constraintName="fk_customer_user" baseTableName="customers"
-      baseColumnNames="user_id"
-      referencedTableName="users" referencedColumnNames="user_id"
-      onDelete="CASCADE" />
-
+    <addForeignKeyConstraint
+      baseTableName="products"
+      baseColumnNames="category_id"
+      constraintName="fk_product_category"
+      referencedTableName="categories"
+      referencedColumnNames="category_id" />
   </changeSet>
 </databaseChangeLog>

@@ -5,6 +5,12 @@
    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
    <include file="db/changelog/changelog-001-create-users-table.xml" />
-   <include file="db/changelog/changelog-002-create-address-table.xml" />
+   <include file="db/changelog/changelog-002-create-addresses-table.xml" />
+   <include file="db/changelog/changelog-003-create-customers-table.xml" />
+   <include file="db/changelog/changelog-004-create-categories-table.xml" />
+   <include file="db/changelog/changelog-005-create-products-table.xml" />
+   <include file="db/changelog/changelog-006-create-orders-table.xml" />
+   <include file="db/changelog/changelog-007-create-order-items-table.xml" />
+   <include file="db/changelog/changelog-008-create-payments-table.xml" />
 
 </databaseChangeLog>

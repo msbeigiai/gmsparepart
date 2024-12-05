@@ -5,37 +5,36 @@
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                       http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-  <changeSet id="002-create-addresses-table" author="Mohsen">
-    <createTable tableName="addresses">
-      <column name="address_id" type="SERIAL">
+  <changeSet id="008-create-payments-table" author="Mohsen">
+    <createTable tableName="payments">
+      <column name="payment_id" type="UUID">
         <constraints primaryKey="true" nullable="false" />
       </column>
-      <column name="user_id" type="UUID">
+      <column name="order_id" type="UUID">
+        <constraints nullable="false" unique="true" />
+      </column>
+      <column name="payment_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
         <constraints nullable="false" />
       </column>
-      <column name="address_line1" type="TEXT">
+      <column name="amount" type="DECIMAL(10, 2)">
         <constraints nullable="false" />
       </column>
-      <column name="city" type="VARCHAR(50)">
+      <column name="payment_method" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
-      <column name="postal_code" type="VARCHAR(20)">
-        <constraints nullable="true" />
-      </column>
-      <column name="country" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+      <column name="status" type="VARCHAR(50)" defaultValue="PENDING">
         <constraints nullable="false" />
       </column>
     </createTable>
 
+    <!-- Foreign key for order_id -->
     <addForeignKeyConstraint
-      constraintName="fk_address_user"
-      baseTableName="addresses"
-      baseColumnNames="user_id"
-      referencedTableName="users"
-      referencedColumnNames="user_id"
+      constraintName="fk_payment_order"
+      baseTableName="payments"
+      baseColumnNames="order_id"
+      referencedTableName="orders"
+      referencedColumnNames="order_id"
       onDelete="CASCADE" />
   </changeSet>
+
 </databaseChangeLog>

@@ -1,0 +1,47 @@
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                      http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+  <changeSet id="007-create-order-items-table" author="Mohsen">
+    <createTable tableName="order_items">
+      <column name="order_item_id" type="SERIAL">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="order_id" type="UUID">
+        <constraints nullable="false" />
+      </column>
+      <column name="product_id" type="UUID">
+        <constraints nullable="false" />
+      </column>
+      <column name="quantity" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="price_per_unit" type="DECIMAL(10, 2)">
+        <constraints nullable="false" />
+      </column>
+      <column name="subtotal" type="DECIMAL(10, 2)" />
+    </createTable>
+
+    <!-- Foreign key for order_id -->
+    <addForeignKeyConstraint
+      constraintName="fk_order_item_order"
+      baseTableName="order_items"
+      baseColumnNames="order_id"
+      referencedTableName="orders"
+      referencedColumnNames="order_id"
+      onDelete="CASCADE" />
+
+    <!-- Foreign key for part_id -->
+    <addForeignKeyConstraint
+      constraintName="fk_order_item_product"
+      baseTableName="order_items"
+      baseColumnNames="product_id"
+      referencedTableName="products"
+      referencedColumnNames="product_id"
+      onDelete="CASCADE" />
+  </changeSet>
+
+</databaseChangeLog>
