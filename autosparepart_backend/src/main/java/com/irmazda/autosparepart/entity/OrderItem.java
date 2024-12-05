@@ -1,4 +1,4 @@
-package com.irmazda.autosparepart.repository;
+package com.irmazda.autosparepart.entity;
 
 import java.math.BigDecimal;
 
