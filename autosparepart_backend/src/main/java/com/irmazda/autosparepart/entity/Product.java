@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -38,12 +38,6 @@ public class Product {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
-  @Column(name = "created_at", updatable = false, nullable = false)
-  private LocalDateTime createdAt;
-
-  @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
-
   public Product(UUID productId, Category category, String name, String description, BigDecimal price,
       int stockQuantity, LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.productId = productId;
@@ -52,8 +46,6 @@ public class Product {
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 
   public UUID getProductId() {
@@ -102,22 +94,6 @@ public class Product {
 
   public void setStockQuantity(int stockQuantity) {
     this.stockQuantity = stockQuantity;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
   }
 
 }

@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "addresses")
-public class Address {
+public class Address extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +36,6 @@ public class Address {
   @Column(name = "country", nullable = false)
   private String country;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
   public Address(Long addressId, User user, String addressLine1, String city, String postalCode, String country,
       LocalDateTime createdAt) {
     this.addressId = addressId;
@@ -47,7 +44,6 @@ public class Address {
     this.city = city;
     this.postalCode = postalCode;
     this.country = country;
-    this.createdAt = createdAt;
   }
 
   public Long getAddressId() {
@@ -97,13 +93,4 @@ public class Address {
   public void setCountry(String country) {
     this.country = country;
   }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
 }

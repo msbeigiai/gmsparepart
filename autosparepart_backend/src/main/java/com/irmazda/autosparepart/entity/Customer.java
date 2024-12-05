@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,6 @@ public class Customer {
   @Column(name = "total_spent")
   private BigDecimal totalSpent = BigDecimal.ZERO;
 
-  @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
-
   public Customer(Long customerId, User user, String name, String phoneNumber, BigDecimal totalSpent,
       LocalDateTime createdAt) {
     this.customerId = customerId;
@@ -36,7 +33,6 @@ public class Customer {
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.totalSpent = totalSpent;
-    this.createdAt = createdAt;
   }
 
   public Long getCustomerId() {
@@ -78,13 +74,4 @@ public class Customer {
   public void setTotalSpent(BigDecimal totalSpent) {
     this.totalSpent = totalSpent;
   }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
 }
