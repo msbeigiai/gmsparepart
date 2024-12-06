@@ -1,0 +1,32 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="009-create-product-images-table" author="Mohsen">
+        <createTable tableName="product_images">
+            <column name="image_id" type="UUID">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="product_id" type="UUID">
+                <constraints nullable="false" />
+            </column>
+            <column name="url" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="alt_text" type="TEXT" />
+            <column name="is_main_image" type="BOOLEAN" defaultValue="false" />
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            constraintName="fk_product_images_product"
+            baseTableName="product_images"
+            baseColumnNames="product_id"
+            referencedTableName="products"
+            referencedColumnNames="product_id"
+            onDelete="CASCADE" />
+    </changeSet>
+</databaseChangeLog>

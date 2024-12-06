@@ -1,0 +1,98 @@
+package com.irmazda.autosparepart.entity;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "product_images")
+public class ProductImage {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "image_id", updatable = false, nullable = false)
+  private UUID imageId;
+
+  @ManyToOne
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
+
+  @Column(name = "url", nullable = false)
+  private String url;
+
+  @Column(name = "alt_text")
+  private String altText;
+
+  @Column(name = "is_main_image", nullable = false)
+  private boolean isMainImage;
+
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  public ProductImage(UUID imageId, Product product, String url, String altText, boolean isMainImage,
+      LocalDateTime createdAt) {
+    this.imageId = imageId;
+    this.product = product;
+    this.url = url;
+    this.altText = altText;
+    this.isMainImage = isMainImage;
+    this.createdAt = createdAt;
+  }
+
+  public UUID getImageId() {
+    return imageId;
+  }
+
+  public void setImageId(UUID imageId) {
+    this.imageId = imageId;
+  }
+
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getAltText() {
+    return altText;
+  }
+
+  public void setAltText(String altText) {
+    this.altText = altText;
+  }
+
+  public boolean isMainImage() {
+    return isMainImage;
+  }
+
+  public void setMainImage(boolean isMainImage) {
+    this.isMainImage = isMainImage;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+}
