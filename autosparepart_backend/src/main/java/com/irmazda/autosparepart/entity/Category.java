@@ -19,7 +19,7 @@ public class Category extends BaseEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @Column(name = "discription")
+  @Column(name = "description")
   private String description;
 
   public Category(Long categoryId, String name, String description) {

@@ -1,6 +1,5 @@
 package com.irmazda.autosparepart.entity;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -14,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product_images")
-public class ProductImage {
+public class ProductImage extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,17 +33,12 @@ public class ProductImage {
   @Column(name = "is_main_image", nullable = false)
   private boolean isMainImage;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
-  public ProductImage(UUID imageId, Product product, String url, String altText, boolean isMainImage,
-      LocalDateTime createdAt) {
+  public ProductImage(UUID imageId, Product product, String url, String altText, boolean isMainImage) {
     this.imageId = imageId;
     this.product = product;
     this.url = url;
     this.altText = altText;
     this.isMainImage = isMainImage;
-    this.createdAt = createdAt;
   }
 
   public UUID getImageId() {
@@ -86,13 +80,4 @@ public class ProductImage {
   public void setMainImage(boolean isMainImage) {
     this.isMainImage = isMainImage;
   }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
 }
