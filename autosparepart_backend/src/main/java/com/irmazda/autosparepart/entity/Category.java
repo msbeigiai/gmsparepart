@@ -22,8 +22,10 @@ public class Category extends BaseEntity {
   @Column(name = "description")
   private String description;
 
-  public Category(Long categoryId, String name, String description) {
-    this.categoryId = categoryId;
+  public Category() {
+  }
+
+  public Category(String name, String description) {
     this.name = name;
     this.description = description;
   }

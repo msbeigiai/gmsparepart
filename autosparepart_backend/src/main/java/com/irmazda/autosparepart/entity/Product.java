@@ -43,8 +43,10 @@ public class Product extends BaseEntity {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
-  public Product(Category category, String name, String description, BigDecimal price, int stockQuantity) {
-    this.category = category;
+  public Product() {
+  }
+
+  public Product(String name, String description, BigDecimal price, int stockQuantity) {
     this.name = name;
     this.description = description;
     this.price = price;

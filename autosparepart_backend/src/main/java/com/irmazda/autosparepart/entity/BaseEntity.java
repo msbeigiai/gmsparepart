@@ -15,7 +15,7 @@ import jakarta.persistence.MappedSuperclass;
 public class BaseEntity {
   @CreatedDate
   @Column(updatable = false)
-  private LocalDateTime createdAt;
+  private LocalDateTime createdAt = LocalDateTime.now();
 
   // @CreatedBy
   // @Column(updatable = false)
