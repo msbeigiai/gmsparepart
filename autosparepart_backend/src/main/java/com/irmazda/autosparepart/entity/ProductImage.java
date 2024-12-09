@@ -33,9 +33,10 @@ public class ProductImage extends BaseEntity {
   @Column(name = "is_main_image", nullable = false)
   private boolean isMainImage;
 
-  public ProductImage(UUID imageId, Product product, String url, String altText, boolean isMainImage) {
-    this.imageId = imageId;
-    this.product = product;
+  public ProductImage() {
+  }
+
+  public ProductImage(String url, String altText, boolean isMainImage) {
     this.url = url;
     this.altText = altText;
     this.isMainImage = isMainImage;
