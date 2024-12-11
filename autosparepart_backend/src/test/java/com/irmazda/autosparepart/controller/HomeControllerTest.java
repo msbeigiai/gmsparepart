@@ -22,17 +22,17 @@ public class HomeControllerTest {
   @Test
   public void returnsWelcomeWhenGetHome() throws Exception {
     mockMvc
-    .perform(get("/home"))
-    .andExpect(status().isOk())
-    .andExpect(content().string("This is Home Page!"));
+            .perform(get("/home"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("This is Home Page!"));
   }
 
   @Test
   @WithMockUser
   public void returnsMessageWhenGetSecureEndpoint() throws Exception {
     mockMvc
-    .perform(get("/secure-home"))
-    .andExpect(status().isOk())
-    .andExpect(content().string("this is SECURE endpoint"));
+            .perform(get("/secure-home"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("this is SECURE endpoint"));
   }
 }
