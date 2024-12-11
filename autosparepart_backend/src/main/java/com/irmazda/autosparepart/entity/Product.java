@@ -1,6 +1,7 @@
 package com.irmazda.autosparepart.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class Product extends BaseEntity {
   private Category category;
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ProductImage> images;
+  private List<ProductImage> images = new ArrayList<>();
 
   @Column(name = "name", nullable = false)
   private String name;
@@ -51,6 +52,11 @@ public class Product extends BaseEntity {
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
+  }
+
+  public void addImage(ProductImage image) {
+    image.setProduct(this);  // Ensure bidirectional linkage
+    this.images.add(image);
   }
 
   public UUID getProductId() {
