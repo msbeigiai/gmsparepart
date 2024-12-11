@@ -4,27 +4,20 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class ProductResponseDTO {
-  private UUID productId;
   private String name;
   private String description;
   private BigDecimal price;
   private int stockQuantity;
 
-  public ProductResponseDTO(UUID productId, String name, String description, BigDecimal price,
-      int stockQuantity) {
-    this.productId = productId;
+  public ProductResponseDTO() {
+  }
+
+  public ProductResponseDTO(String name, String description, BigDecimal price,
+                            int stockQuantity) {
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
-  }
-
-  public UUID getProductId() {
-    return productId;
-  }
-
-  public void setProductId(UUID productId) {
-    this.productId = productId;
   }
 
   public String getName() {

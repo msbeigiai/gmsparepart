@@ -1,20 +1,24 @@
 package com.irmazda.autosparepart.dto.product;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class ProductRequestDTO {
   private String name;
   private String description;
   private BigDecimal price;
-  private int stockQuantity;
-  private Long categoryId;
+  private int stock;
+  private String categoryName;
+  private List<ProductImageDTO> images;
 
-  public ProductRequestDTO(String name, String description, BigDecimal price, int stockQuantity, Long categoryId) {
+  public ProductRequestDTO(String name, String description, BigDecimal price, int stockQuantity, String categoryName,
+      List<ProductImageDTO> images) {
     this.name = name;
     this.description = description;
     this.price = price;
-    this.stockQuantity = stockQuantity;
-    this.categoryId = categoryId;
+    this.stock = stockQuantity;
+    this.categoryName = categoryName;
+    this.images = images;
   }
 
   public String getName() {
@@ -41,20 +45,28 @@ public class ProductRequestDTO {
     this.price = price;
   }
 
-  public int getStockQuantity() {
-    return stockQuantity;
+  public int getStock() {
+    return stock;
   }
 
-  public void setStockQuantity(int stockQuantity) {
-    this.stockQuantity = stockQuantity;
+  public void setStock(int stock) {
+    this.stock = stock;
   }
 
-  public Long getCategoryId() {
-    return categoryId;
+  public List<ProductImageDTO> getImages() {
+    return images;
   }
 
-  public void setCategoryId(Long categoryId) {
-    this.categoryId = categoryId;
+  public void setImages(List<ProductImageDTO> images) {
+    this.images = images;
+  }
+
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
 
 }
