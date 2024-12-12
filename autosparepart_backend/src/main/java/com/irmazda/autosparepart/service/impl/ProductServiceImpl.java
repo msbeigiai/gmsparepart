@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
       image.setUrl(imgRequest.getUrl());
       image.setAltText(imgRequest.getAltText());
       image.setMainImage(imgRequest.isMainImage());
-      product.addImage(image);  // Automatically links the image to the product
+      product.addImage(image);
     });
 
     Product savedProduct = productRepository.save(product);
@@ -53,8 +53,10 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public List<ProductResponseDTO> getAllProducts() {
-
-    return null;
+    return productRepository.findAll()
+            .stream()
+            .map(ProductToProductResponseDTO::mapFrom)
+            .toList();
   }
 
 }
