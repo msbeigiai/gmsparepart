@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Keycloak from "keycloak-js";
+// src/features/auth/authSlice.ts
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import Keycloak from 'keycloak-js';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -7,7 +8,8 @@ interface AuthState {
   user: Keycloak.KeycloakTokenParsed | null;
 }
 
-const keycloak = new Keycloak('/keycloak.json');
+// Singleton instance outside of the component
+export const keycloak = new Keycloak('/keycloak.json');
 
 const initialState: AuthState = {
   isAuthenticated: false,
@@ -34,12 +36,27 @@ const authSlice = createSlice({
 });
 
 export const { loginSuccess, logout } = authSlice.actions;
+
+let isKeycloakInitialized = false; // Add this outside the function
+
 export const authenticateUser = () => async (dispatch: any) => {
-  await keycloak.init({ onLoad: 'login-required' });
-  if (keycloak.authenticated) {
-    dispatch(loginSuccess({ token: keycloak.token as string, user: keycloak.tokenParsed! }));
+  try {
+    if (!isKeycloakInitialized) {
+      await keycloak.init({ onLoad: 'login-required' });
+      isKeycloakInitialized = true;
+
+      if (keycloak.authenticated) {
+        dispatch(
+          loginSuccess({
+            token: keycloak.token as string,
+            user: keycloak.tokenParsed!,
+          })
+        );
+      }
+    }
+  } catch (error) {
+    console.error('Keycloak initialization failed:', error);
   }
 };
 
 export default authSlice.reducer;
-

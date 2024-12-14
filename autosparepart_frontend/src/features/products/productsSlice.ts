@@ -6,6 +6,7 @@ interface Product {
   name: string;
   price: number;
   description: string;
+  image: string;
 }
 
 interface ProductsState {
@@ -14,10 +15,16 @@ interface ProductsState {
   error: string | null;
 }
 
-const API_BASE_URL = '/api/v1/products/';
+const API_BASE_URL = 'http://localhost:8081/api/v1/products';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const response = await axios.get<Product[]>(API_BASE_URL);
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_, { getState }) => {
+  const state: any = getState();  
+  const token = state.auth.token;
+  const response = await axios.get<Product[]>(API_BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 });
 
