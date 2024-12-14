@@ -1,10 +1,12 @@
 package com.irmazda.autosparepart.service.impl;
 
+import com.irmazda.autosparepart.dto.product.ProductDTO;
 import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
 import com.irmazda.autosparepart.dto.product.ProductResponseDTO;
 import com.irmazda.autosparepart.entity.Category;
 import com.irmazda.autosparepart.entity.Product;
 import com.irmazda.autosparepart.entity.ProductImage;
+import com.irmazda.autosparepart.maps.ProductToProductDTO;
 import com.irmazda.autosparepart.maps.ProductToProductResponseDTO;
 import com.irmazda.autosparepart.repository.CategoryRepository;
 import com.irmazda.autosparepart.repository.ProductImageRepository;
@@ -27,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
   }
 
   @Override
-  public ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO) {
+  public ProductDTO addProduct(ProductRequestDTO productRequestDTO) {
     Category category = categoryRepository.findByName(productRequestDTO.getCategoryName())
             .orElseGet(() -> new Category(productRequestDTO.getCategoryName()));
 
@@ -48,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     Product savedProduct = productRepository.save(product);
 
-    return ProductToProductResponseDTO.mapFrom(savedProduct);
+    return ProductToProductDTO.mapFrom(savedProduct);
   }
 
   @Override

@@ -1,11 +1,13 @@
 package com.irmazda.autosparepart.service;
 
-import java.util.List;
-
+import com.irmazda.autosparepart.dto.product.ProductDTO;
 import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
 import com.irmazda.autosparepart.dto.product.ProductResponseDTO;
 
+import java.util.List;
+
 public interface ProductService {
-  ProductResponseDTO addProduct(ProductRequestDTO productRequestDTO);
+  ProductDTO addProduct(ProductRequestDTO productRequestDTO);
+
   List<ProductResponseDTO> getAllProducts();
 }

@@ -1,5 +1,6 @@
 package com.irmazda.autosparepart.service;
 
+import com.irmazda.autosparepart.dto.product.ProductDTO;
 import com.irmazda.autosparepart.dto.product.ProductImageDTO;
 import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
 import com.irmazda.autosparepart.dto.product.ProductResponseDTO;
@@ -60,12 +61,13 @@ public class ProductServiceTest {
     when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
 
     // Act
-    ProductResponseDTO response = productService.addProduct(request);
+    ProductDTO response = productService.addProduct(request);
 
     // Assert
     assertNotNull(response);
     assertEquals("Test Product", response.getName());
     assertEquals(BigDecimal.valueOf(100.0), response.getPrice());
+
     verify(productRepository, times(1)).save(any(Product.class));
   }
 
