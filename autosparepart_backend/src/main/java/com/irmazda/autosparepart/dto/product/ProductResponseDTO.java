@@ -1,6 +1,8 @@
 package com.irmazda.autosparepart.dto.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ProductResponseDTO {
@@ -8,16 +10,18 @@ public class ProductResponseDTO {
   private String description;
   private BigDecimal price;
   private int stockQuantity;
+  private String image;
 
   public ProductResponseDTO() {
   }
 
   public ProductResponseDTO(String name, String description, BigDecimal price,
-                            int stockQuantity) {
+                            int stockQuantity, String image) {
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
+    this.image = image;
   }
 
   public String getName() {
@@ -52,4 +56,11 @@ public class ProductResponseDTO {
     this.stockQuantity = stockQuantity;
   }
 
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
 }

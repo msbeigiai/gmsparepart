@@ -11,6 +11,7 @@ public class ProductToProductResponseDTO {
     productResponseDTO.setName(product.getName());
     productResponseDTO.setPrice(product.getPrice());
     productResponseDTO.setStockQuantity(product.getStockQuantity());
+    productResponseDTO.setImage(product.getImages().getFirst().getUrl());
 
     return productResponseDTO;
   }
