@@ -7,9 +7,11 @@ import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +20,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(SecurityConfig.class)
+@AutoConfigureMockMvc
 public class ProductIntegrationTest {
 
   @LocalServerPort
@@ -32,6 +34,7 @@ public class ProductIntegrationTest {
   }
 
   @Test
+//  @WithMockUser
   void shouldAddProductSuccessfully() {
     // Arrange: Create a product request DTO
     ProductRequestDTO request = new ProductRequestDTO(

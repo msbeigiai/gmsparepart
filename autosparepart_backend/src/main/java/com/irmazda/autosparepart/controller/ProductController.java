@@ -1,12 +1,12 @@
 package com.irmazda.autosparepart.controller;
 
+import com.irmazda.autosparepart.dto.product.ProductDTO;
+import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
+import com.irmazda.autosparepart.dto.product.ProductResponseDTO;
 import com.irmazda.autosparepart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.irmazda.autosparepart.dto.product.ProductRequestDTO;
-import com.irmazda.autosparepart.dto.product.ProductResponseDTO;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class ProductController {
   }
 
   @PostMapping
-  public ResponseEntity<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO pRequestDTO) {
+  public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductRequestDTO pRequestDTO) {
     return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(productService.addProduct(pRequestDTO));
