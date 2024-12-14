@@ -55,7 +55,7 @@
     <insert tableName="product_images">
       <column name="image_id" value="d444e7c8-b3b5-4b1d-84cf-98765ff00404" />
       <column name="product_id" value="a111e7c8-b3b5-4b1d-84cf-98765ff00101" />
-      <column name="url" value="https://example.com/images/oil-filter.jpg" />
+      <column name="url" value="https://www.pgfilters.com/wp-content/uploads/2023/02/What-is-the-Oil-Filters-Primary-Job_-1000x675-1.jpg" />
       <column name="alt_text" value="High-quality oil filter" />
       <column name="is_main_image" value="true" />
     </insert>
@@ -63,7 +63,7 @@
     <insert tableName="product_images">
       <column name="image_id" value="e555f7a9-c3f7-4c2e-b0e3-98765ff00505" />
       <column name="product_id" value="b222d7a9-c3f7-4c2e-b0e3-98765ff00202" />
-      <column name="url" value="https://example.com/images/shock-absorber.jpg" />
+      <column name="url" value="https://www.pgfilters.com/wp-content/uploads/2023/02/What-is-the-Oil-Filters-Primary-Job_-1000x675-1.jpg" />
       <column name="alt_text" value="Durable shock absorber" />
       <column name="is_main_image" value="true" />
     </insert>
@@ -71,7 +71,7 @@
     <insert tableName="product_images">
       <column name="image_id" value="f666f8b0-d4f8-4d3f-c1f4-98765ff00606" />
       <column name="product_id" value="c333f8b0-d4f8-4d3f-c1f4-98765ff00303" />
-      <column name="url" value="https://example.com/images/brake-pads-set.jpg" />
+      <column name="url" value="https://www.pgfilters.com/wp-content/uploads/2023/02/What-is-the-Oil-Filters-Primary-Job_-1000x675-1.jpg" />
       <column name="alt_text" value="Complete brake pad set" />
       <column name="is_main_image" value="true" />
     </insert>
