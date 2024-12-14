@@ -1,8 +1,9 @@
 {
   "realm": "irmazda",
-  "auth-server-url": "https://localhost:8080",
+  "auth-server-url": "http://localhost:8080",
   "ssl-required": "external",
   "resource": "irmazda-client",
   "public-client": true,
-  "confidential-port": 0
+  "confidential-port": 0,
+  "checkLoginIframe": false
 }
