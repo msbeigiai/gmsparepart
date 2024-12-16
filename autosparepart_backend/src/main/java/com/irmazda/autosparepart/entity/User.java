@@ -25,6 +25,9 @@ public class User extends BaseEntity {
   @Column(name = "role", nullable = true)
   private String role;
 
+  public User() {
+  }
+
   public User(UUID userId, String email, String role, LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.userId = userId;
     this.email = email;
