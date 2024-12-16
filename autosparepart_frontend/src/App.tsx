@@ -1,8 +1,7 @@
-import { Route, Routes } from 'react-router-dom'
-import AppSidebar from './components/AppSidebar'
-import Home from './components/Home'
+import AppSidebar from './components/navigation/AppSidebar'
+import Navbar from './components/navigation/Navbar'
 import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
-import About from './components/About'
+import AppRoutes from './routes/AppRoutes'
 
 function App() {
   return (
@@ -10,12 +9,12 @@ function App() {
       <SidebarProvider>
         <AppSidebar />
         <SidebarTrigger />
-        <main className="flex-1 p-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-        </main>
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          <main className="flex-1 p-4">
+            <AppRoutes />
+          </main>
+        </div>
       </SidebarProvider>
     </div>
   )
