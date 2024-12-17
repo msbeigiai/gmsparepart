@@ -1,17 +1,12 @@
 package com.irmazda.autosparepart.entity;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -23,8 +18,11 @@ public class Order extends BaseEntity {
   private UUID orderId;
 
   @ManyToOne
-  @JoinColumn(name = "customer_id", nullable = false)
-  private Customer customer;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OrderItem> orderItems;
 
   @Column(name = "order_date", nullable = false, updatable = false)
   private LocalDateTime orderDate;
@@ -35,9 +33,11 @@ public class Order extends BaseEntity {
   @Column(name = "status", nullable = false)
   private String status;
 
-  public Order(UUID orderId, Customer customer, LocalDateTime orderDate, BigDecimal totalAmount, String status) {
-    this.orderId = orderId;
-    this.customer = customer;
+  public Order() {
+  }
+
+  public Order(User user, LocalDateTime orderDate, BigDecimal totalAmount, String status) {
+    this.user = user;
     this.orderDate = orderDate;
     this.totalAmount = totalAmount;
     this.status = status;
@@ -51,12 +51,17 @@ public class Order extends BaseEntity {
     this.orderId = orderId;
   }
 
-  public Customer getCustomer() {
-    return customer;
+  public User getUser() {
+    return user;
   }
 
-  public void setCustomer(Customer customer) {
-    this.customer = customer;
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  public void setOrderItems(List<OrderItem> items) {
+    orderItems.forEach(item -> item.setOrder(this));
+    this.orderItems.addAll(items);
   }
 
   public LocalDateTime getOrderDate() {
