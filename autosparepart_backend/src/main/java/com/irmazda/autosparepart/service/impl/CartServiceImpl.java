@@ -8,11 +8,13 @@ import com.irmazda.autosparepart.repository.CartItemRepository;
 import com.irmazda.autosparepart.repository.CartRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.CartService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class CartServiceImpl implements CartService {
 
   private final CartRepository cartRepository;
