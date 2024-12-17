@@ -9,7 +9,7 @@
             <column name="cart_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="BIGINT">
+            <column name="user_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
@@ -31,7 +31,7 @@
             <column name="cart_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="product_id" type="BIGINT">
+            <column name="product_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="quantity" type="INT">
