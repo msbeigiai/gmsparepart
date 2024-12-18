@@ -8,6 +8,7 @@ import com.irmazda.autosparepart.repository.CartItemRepository;
 import com.irmazda.autosparepart.repository.CartRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.CartService;
+import com.irmazda.autosparepart.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,9 @@ public class CartServiceImpl implements CartService {
   private final CartItemRepository cartItemRepository;
   private final ProductRepository productRepository;
 
-  public CartServiceImpl(CartRepository cartRepository, CartItemRepository cartItemRepository, ProductRepository productRepository) {
+  public CartServiceImpl(CartRepository cartRepository,
+                         CartItemRepository cartItemRepository,
+                         ProductRepository productRepository) {
     this.cartRepository = cartRepository;
     this.cartItemRepository = cartItemRepository;
     this.productRepository = productRepository;
@@ -59,11 +62,11 @@ public class CartServiceImpl implements CartService {
 
   @Override
   public List<CartItem> getCartItems(User user) {
-    return List.of();
+    return cartRepository.findByUser(user).map(Cart::getItems).orElse(List.of());
   }
 
   @Override
   public void clearCart(User user) {
-
+    cartRepository.findByUser(user).ifPresent(cartRepository::delete);
   }
 }
