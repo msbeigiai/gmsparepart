@@ -4,16 +4,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -21,17 +19,23 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+  private final KeycloakRoleConverter keycloakRoleConverter;
+
+  public SecurityConfig(KeycloakRoleConverter keycloakRoleConverter) {
+    this.keycloakRoleConverter = keycloakRoleConverter;
+  }
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
             .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers("/api/**")
+                    .hasRole("CUSTOMER")
                     .requestMatchers(HttpMethod.GET, "/home")
                     .permitAll()
-                    .anyRequest()
-                    .authenticated())
-
+            )
             .oauth2ResourceServer(oauth2 -> oauth2
-                    .jwt(Customizer.withDefaults())
+                    .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
             );
     http.sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -40,6 +44,13 @@ public class SecurityConfig {
     http.cors(c -> c.configurationSource(corsConfigurationSource()));
 
     return http.build();
+  }
+
+  @Bean
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(keycloakRoleConverter);
+    return jwtAuthenticationConverter;
   }
 
   @Bean
