@@ -14,6 +14,7 @@
    <include file="db/changelog/changelog-008-create-payments-table.xml" />
    <include file="db/changelog/changelog-009-create-product-images-table.xml" />
    <include file="db/changelog/changelog-010-create-cart-and-cart-items-table.xml" />
+   <include file="db/changelog/changelog-011-create-favorites-table.xml" />
 
    
    <include file="db/changelog/data/changelog-010-add-data-to-category.xml" />
