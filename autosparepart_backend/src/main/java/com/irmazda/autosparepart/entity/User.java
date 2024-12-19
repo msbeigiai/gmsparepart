@@ -1,6 +1,5 @@
 package com.irmazda.autosparepart.entity;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -28,8 +27,11 @@ public class User extends BaseEntity {
   public User() {
   }
 
-  public User(UUID userId, String email, String role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+  public User(UUID userId) {
     this.userId = userId;
+  }
+
+  public User(String email, String role) {
     this.email = email;
     this.role = role;
   }

@@ -47,6 +47,10 @@ public class Product extends BaseEntity {
   public Product() {
   }
 
+  public Product(UUID productId) {
+    this.productId = productId;
+  }
+
   public Product(String name, String description, BigDecimal price, int stockQuantity) {
     this.name = name;
     this.description = description;
