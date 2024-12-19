@@ -1,17 +1,21 @@
 package com.irmazda.autosparepart.controller;
 
+import java.net.URI;
+import java.security.Principal;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.irmazda.autosparepart.entity.Cart;
-import com.irmazda.autosparepart.entity.CartItem;
 import com.irmazda.autosparepart.entity.User;
 import com.irmazda.autosparepart.service.CartService;
 import com.irmazda.autosparepart.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.security.Principal;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cart")

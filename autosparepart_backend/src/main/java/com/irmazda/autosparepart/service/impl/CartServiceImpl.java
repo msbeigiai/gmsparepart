@@ -1,5 +1,11 @@
 package com.irmazda.autosparepart.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.irmazda.autosparepart.entity.Cart;
 import com.irmazda.autosparepart.entity.CartItem;
 import com.irmazda.autosparepart.entity.Product;
@@ -8,12 +14,6 @@ import com.irmazda.autosparepart.repository.CartItemRepository;
 import com.irmazda.autosparepart.repository.CartRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.CartService;
-import com.irmazda.autosparepart.service.UserService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CartServiceImpl implements CartService {
