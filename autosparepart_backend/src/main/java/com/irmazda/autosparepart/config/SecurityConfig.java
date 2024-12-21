@@ -1,6 +1,8 @@
 package com.irmazda.autosparepart.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.keycloak.authorization.client.util.Http;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,18 +29,14 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/api/**")
-                    .hasRole("CUSTOMER")
-                    .requestMatchers(HttpMethod.GET, "/home")
-                    .permitAll()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                    .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-            );
+    http.authorizeHttpRequests(authorize -> authorize
+        .requestMatchers(HttpMethod.GET, "/api/v1/products").permitAll()
+        .requestMatchers(HttpMethod.GET, "/home").permitAll()
+        .anyRequest().authenticated())
+        .oauth2ResourceServer(oauth2 -> oauth2
+            .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter())));
     http.sessionManagement(
-            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     http.csrf(AbstractHttpConfigurer::disable);
     http.cors(c -> c.configurationSource(corsConfigurationSource()));
