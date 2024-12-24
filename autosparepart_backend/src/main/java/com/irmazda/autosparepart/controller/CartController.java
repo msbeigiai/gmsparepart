@@ -18,7 +18,7 @@ import com.irmazda.autosparepart.service.CartService;
 import com.irmazda.autosparepart.service.UserService;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/v1/carts")
 public class CartController {
 
   private final CartService cartService;
@@ -31,7 +31,7 @@ public class CartController {
 
   @PostMapping("/add")
   public ResponseEntity<Cart> addToCart(@RequestParam UUID productId, @RequestParam int quantity, Principal principal) {
-    User user = userService.getUserFromPrincipal(principal); // Assume this method fetches the authenticated user
+    User user = userService.getUserFromPrincipal(principal); 
     return ResponseEntity.created(URI.create("")).body(cartService.addToCart(user, productId, quantity));
   }
 
@@ -39,8 +39,8 @@ public class CartController {
   public ResponseEntity<?> getCartItems(Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
     return ResponseEntity
-            .ok()
-            .body(cartService.getCartItems(user));
+        .ok()
+        .body(cartService.getCartItems(user));
   }
 
   @DeleteMapping("/clear")
@@ -48,6 +48,5 @@ public class CartController {
     User user = userService.getUserFromPrincipal(principal);
     cartService.clearCart(user);
   }
-
 
 }
