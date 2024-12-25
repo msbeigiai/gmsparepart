@@ -7,6 +7,7 @@ public class ProductToProductResponseDTO {
   public static ProductResponseDTO mapFrom(Product product) {
     ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 
+    productResponseDTO.setProductId(product.getProductId());
     productResponseDTO.setDescription(product.getDescription());
     productResponseDTO.setName(product.getName());
     productResponseDTO.setPrice(product.getPrice());
