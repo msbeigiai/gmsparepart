@@ -1,11 +1,10 @@
 package com.irmazda.autosparepart.dto.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class ProductResponseDTO {
+  private UUID productId;
   private String name;
   private String description;
   private BigDecimal price;
@@ -15,13 +14,22 @@ public class ProductResponseDTO {
   public ProductResponseDTO() {
   }
 
-  public ProductResponseDTO(String name, String description, BigDecimal price,
-                            int stockQuantity, String image) {
+  public ProductResponseDTO(UUID productId, String name, String description, BigDecimal price,
+      int stockQuantity, String image) {
+    this.productId = productId;
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
     this.image = image;
+  }
+
+  public UUID getProductId() {
+    return productId;
+  }
+
+  public void setProductId(UUID productId) {
+    this.productId = productId;
   }
 
   public String getName() {
