@@ -27,6 +27,10 @@ public class User extends BaseEntity {
   public User() {
   }
 
+  public User(String email) {
+    this.email = email;
+  }
+
   public User(UUID userId) {
     this.userId = userId;
   }
