@@ -3,15 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Search, User, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/app/hooks";
 import UserStatusHover from "../UserStatusHover";
 import useAuth from "@/hooks/useAuth";
+
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [showUserEmail, setShowUserEmail] = React.useState(false);
   const navigate = useNavigate();
-  const {isAuthenticated, user} = useAppSelector((state) => state.auth); 
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { items } = useAppSelector((state) => state.localCart);
+
+  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <nav className={cn("bg-card text-card-foreground shadow-md")}>
@@ -39,12 +44,25 @@ const Navbar: React.FC = () => {
           <Button variant="ghost" size="icon">
             <Search />
           </Button>
-          <Button variant="ghost" size="icon">
-            <ShoppingCart />
-          </Button>
+          {/* Shopping Cart with Badge */}
+        <Button
+          variant="ghost"
+          className="relative"
+          onClick={() => navigate("/cart")}
+        >
+          <ShoppingCart className="h-5 w-5" />
+          {totalItems > 0 && (
+            <Badge
+            variant="secondary"
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center"
+            >
+              {totalItems}
+            </Badge>
+          )}
+        </Button>
 
           {isAuthenticated ? (
-            <Link to="/profile"> 
+            <Link to="/profile">
               {user?.email && (
                 <UserStatusHover />
               )}
