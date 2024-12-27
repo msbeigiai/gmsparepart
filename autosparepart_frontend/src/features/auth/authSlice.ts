@@ -1,6 +1,7 @@
 // src/features/auth/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Keycloak from 'keycloak-js';
+import { AppDispatch } from '../../app/store'; // Adjust the import path as necessary
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -21,7 +22,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginSuccess: (state, action: PayloadAction<{ token: string; user: Keycloak.KeycloakTokenParsed }>) => {
+    loginSuccess: (state, action: PayloadAction<{ token: string, user: Keycloak.KeycloakTokenParsed }>) => {
       state.isAuthenticated = true;
       state.token = action.payload.token;
       state.user = action.payload.user;
@@ -37,9 +38,9 @@ const authSlice = createSlice({
 
 export const { loginSuccess, logout } = authSlice.actions;
 
-let isKeycloakInitialized = false; // Add this outside the function
+let isKeycloakInitialized = false; 
 
-export const authenticateUser = () => async (dispatch: any) => {
+export const authenticateUser = () => async (dispatch: AppDispatch) => {
   try {
     if (!isKeycloakInitialized) {
       await keycloak.init({ onLoad: 'login-required' });
