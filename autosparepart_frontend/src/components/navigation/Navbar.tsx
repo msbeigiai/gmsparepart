@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
         <Button
           variant="ghost"
           className="relative"
-          onClick={() => navigate("/cart")}
+          onClick={() => navigate("/checkout")}
         >
           <ShoppingCart className="h-5 w-5" />
           {totalItems > 0 && (
