@@ -4,6 +4,7 @@ import Home from "@/components/pages/Home";
 import Profile from "@/components/pages/Profile";
 // import NotFound from "@/components/pages/NotFound";
 import { Route, Routes } from "react-router-dom";
+import CheckoutStepper from "@/components/pages/CheckoutStepper";
 
 const AppRoutes = () => (
   <Routes>
@@ -11,6 +12,7 @@ const AppRoutes = () => (
     <Route path="/about" element={<About />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/login" element={<Login />} />
+    <Route path="/checkout" element={<CheckoutStepper />} />
 
     {/* <Route path="*" element={<NotFound />} /> */}
   </Routes>
