@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,15 +30,15 @@ public class FavoriteController {
   }
 
   @GetMapping
-  public List<Favorite> getUserFavorites(Principal principal) {
+  public ResponseEntity<List<Favorite>> getUserFavorites(Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
-    return favoriteService.getUserFavorites(user.getUserId());
+    return ResponseEntity.ok(favoriteService.getUserFavorites(user.getUserId()));
   }
 
   @PostMapping("/add/{productId}")
-  public Favorite addFavorite(@PathVariable UUID productId, Principal principal) {
+  public ResponseEntity<Favorite> addFavorite(@PathVariable UUID productId, Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
-    return favoriteService.addFavorite(user.getUserId(), productId);
+    return ResponseEntity.ok(favoriteService.addFavorite(user.getUserId(), productId));
   }
 
   @DeleteMapping("/remove/{productId}")
