@@ -1,7 +1,6 @@
 // src/features/auth/authSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Keycloak from 'keycloak-js';
-import { AppDispatch } from '../../app/store'; // Adjust the import path as necessary
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -9,7 +8,6 @@ interface AuthState {
   user: Keycloak.KeycloakTokenParsed | null;
 }
 
-// Singleton instance outside of the component
 export const keycloak = new Keycloak('/keycloak.json');
 
 const initialState: AuthState = {
@@ -38,25 +36,19 @@ const authSlice = createSlice({
 
 export const { loginSuccess, logout } = authSlice.actions;
 
-let isKeycloakInitialized = false; 
+let isKeycloakInitialized = false;
 
-export const authenticateUser = () => async (dispatch: AppDispatch) => {
+export const initializeKeycloak = async () => {
   try {
-    if (!isKeycloakInitialized) {
-      await keycloak.init({ onLoad: 'login-required' });
-      isKeycloakInitialized = true;
-
-      if (keycloak.authenticated) {
-        dispatch(
-          loginSuccess({
-            token: keycloak.token as string,
-            user: keycloak.tokenParsed!,
-          })
-        );
-      }
-    }
+    const authenticated = await keycloak.init({
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
+    });
+    console.log('Keycloak initialized:', authenticated);
+    return authenticated;
   } catch (error) {
-    console.error('Keycloak initialization failed:', error);
+    console.error('Failed to initialize Keycloak:', error);
+    throw error;
   }
 };
 
