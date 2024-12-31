@@ -3,25 +3,68 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { keycloak } from "@/features/auth/authSlice";
 import { removeFromLocalCart, updateLocalQuantity } from '@/features/cart/localCartSlice';
 import { Check, CreditCard, MapPin, Minus, Plus, ShoppingCart, Trash2, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from "react-router-dom";
 
 
 const CheckoutStepper = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  // const [currentStep, setCurrentStep] = useState(0);
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
-
-  // Get cart items from Redux store
+  const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const { items } = useAppSelector((state) => state.localCart);
+  const [nextButtonActive, setNextButtonActive] = useState(true);
+
+  useEffect(() => {
+    setCurrentStep(0);
+  }, [items]);
+
+
+  const [currentStep, setCurrentStep] = useState(() => {
+    // Check if we're returning from Keycloak login
+    const isReturningFromAuth = localStorage.getItem('checkoutRedirect') === 'true';
+    // If we are, and user is authenticated, start at shipping step
+    if (isReturningFromAuth) {
+      localStorage.removeItem('checkoutRedirect'); // Clean up
+      return 2; // Skip to shipping step
+    }
+    return 0; // Otherwise start at beginning
+  });
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      // For authenticated users, skip the account step
+      if (isAuthenticated && currentStep === 0 && items.length > 0) {
+        setCurrentStep(1);
+        setNextButtonActive(true);
+      } else {
+        setNextButtonActive(false);
+        setCurrentStep(current => current + 1);
+      }
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      // If user is authenticated and on shipping step,
+      // go back to cart review
+      if (isAuthenticated && currentStep === 2) {
+        setCurrentStep(0);
+      } else {
+        setCurrentStep(current => current - 1);
+      }
+    }
+  };
+
+  const handleAccountStep = () => {
+    keycloak.login();
+  };
 
   const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
-  
   const steps = [
     { title: 'Review Cart', icon: <ShoppingCart className="h-6 w-6" /> },
     ...(isAuthenticated ? [] : [{ title: 'Account', icon: <User className="h-6 w-6" /> }]),
@@ -29,17 +72,12 @@ const CheckoutStepper = () => {
     { title: 'Payment', icon: <CreditCard className="h-6 w-6" /> },
     { title: 'Confirmation', icon: <Check className="h-6 w-6" /> }
   ];
-  
-  useEffect(() => {
-    if (isAuthenticated && currentStep === 1) {
-      setCurrentStep(2); 
-    }
-  }, [isAuthenticated, currentStep]);
+
 
   // Calculate total
 
   const updateQuantity = (productId: string, newQuantity: number) => {
-    if (newQuantity >= 1) {  // Prevent quantity below 1
+    if (newQuantity >= 1) {
       dispatch(updateLocalQuantity({ productId, quantity: newQuantity }));
     }
   };
@@ -150,10 +188,16 @@ const CheckoutStepper = () => {
   );
 
   const AccountForm = () => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    }
-    return null;
+    return <div className="text-center space-y-4">
+      <h3 className="text-xl font-medium">Account Required</h3>
+      <p className="text-gray-500">Please log in or create an account to continue checkout.</p>
+      <Button
+        className="w-full"
+        onClick={handleAccountStep}
+      >
+        Continue to Login
+      </Button>
+    </div>
   };
 
   const PaymentForm = () => (
@@ -206,30 +250,6 @@ const CheckoutStepper = () => {
     return stepMap[currentStep as keyof typeof stepMap] || null;
   };
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      // If user is authenticated and currently on cart review (step 0),
-      // skip the account step and go directly to shipping
-      if (isAuthenticated && currentStep === 0) {
-        setCurrentStep(2);
-      } else {
-        setCurrentStep(current => current + 1);
-      }
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 0) {
-      // If user is authenticated and currently on shipping (step 2),
-      // go back to cart review (step 0)
-      if (isAuthenticated && currentStep === 2) {
-        setCurrentStep(0);
-      } else {
-        setCurrentStep(current => current - 1);
-      }
-    }
-  };
-
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
@@ -262,12 +282,18 @@ const CheckoutStepper = () => {
         >
           Back
         </Button>
-        <Button
-          onClick={handleNext}
-          disabled={currentStep === steps.length - 1 || (currentStep === 0 && items.length === 0)}
-        >
-          {currentStep === steps.length - 2 ? 'Place Order' : 'Next'}
-        </Button>
+        {nextButtonActive ? (
+          <Button
+            onClick={handleNext}
+            disabled={currentStep === steps.length - 1 || (currentStep === 0 && items.length === 0)}
+          >
+            {currentStep === steps.length - 2 ? 'Place Order' : 'Next'}
+          </Button>) : (<Button
+            onClick={handleNext}
+            disabled={currentStep === 1}
+          >
+            {currentStep === steps.length - 2 ? 'Place Order' : 'Next'}
+          </Button>)}
       </CardFooter>
     </Card>
   );
