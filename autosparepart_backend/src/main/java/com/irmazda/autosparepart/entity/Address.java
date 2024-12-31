@@ -2,6 +2,8 @@ package com.irmazda.autosparepart.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class Address extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
+  @JsonIgnore
   private User user;
 
   @Column(name = "address_line1", nullable = false)
@@ -35,6 +38,9 @@ public class Address extends BaseEntity {
 
   @Column(name = "country", nullable = false)
   private String country;
+
+  public Address() {
+  }
 
   public Address(Long addressId, User user, String addressLine1, String city, String postalCode, String country,
       LocalDateTime createdAt) {
