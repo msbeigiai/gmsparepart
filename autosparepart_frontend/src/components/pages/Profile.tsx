@@ -1,24 +1,47 @@
-import React from 'react';
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Package, 
-  CreditCard, 
-  MapPin, 
-  Heart, 
-  ShoppingBag, 
-  Bell, 
-  Settings,
+import { fetchAddresses } from '@/features/address/addressSlice';
+import {
+  Bell,
+  CreditCard,
+  ExternalLink,
+  Heart,
+  Package,
   Plus,
-  ExternalLink
+  ShoppingBag
 } from 'lucide-react';
+import { useEffect } from 'react';
 
 const EcommerceProfile = () => {
+  const dispatch = useAppDispatch();
+  const {items: addresses} = useAppSelector((state) => state.addresses);
+  const { isAuthenticated }  = useAppSelector((state) => state.auth);
+
+  // useEffect(() => {
+  //   dispatch(fetchAddresses());
+  // }), [];
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full sm:w-96">
+          <CardContent className="p-6">
+            <h1 className="text-2xl font-bold mb-4">Please Sign In</h1>
+            <p className="text-gray-600 mb-4">
+              You need to be signed in to access your profile.
+            </p>
+            <Button>Sign In</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-purple-100 to-indigo-100 p-4">
       <div className="max-w-6xl mx-auto">
@@ -30,7 +53,7 @@ const EcommerceProfile = () => {
                 <AvatarImage src="/api/placeholder/150/150" alt="Profile picture" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
-              
+
               <div className="flex-1 text-center md:text-left space-y-2">
                 <h1 className="text-2xl font-bold">Sarah Johnson</h1>
                 <p className="text-gray-600">Member since January 2024</p>
@@ -43,7 +66,7 @@ const EcommerceProfile = () => {
                   </span>
                 </div>
               </div>
-              
+
               <div className="flex flex-col gap-2">
                 <Button>
                   <ShoppingBag className="h-4 w-4 mr-2" />
@@ -110,24 +133,23 @@ const EcommerceProfile = () => {
           {/* Addresses Tab */}
           <TabsContent value="addresses">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
-                <Card key={i}>
+              {addresses.map((address) => (
+                <Card key={address.addressId}>
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-semibold mb-2">
-                          {i === 1 ? 'Home' : 'Office'}
-                          {i === 1 && (
+                          {/* {address.addressId === '1' ? 'Home' : 'Office'}
+                          {address === 1 && (
                             <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                               Default
                             </span>
-                          )}
+                          )} */}
                         </h3>
-                        <p className="text-gray-600">Sarah Johnson</p>
-                        <p className="text-gray-600">123 Main Street, Apt {i}</p>
-                        <p className="text-gray-600">San Francisco, CA 94105</p>
-                        <p className="text-gray-600">United States</p>
-                        <p className="text-gray-600">Phone: (555) 123-456{i}</p>
+                        <p className="text-gray-600">{address.addressLine1}</p>
+                        <p className="text-gray-600">{address.city}</p>
+                        <p className="text-gray-600">{address.country}</p>
+                        <p className="text-gray-600">Phone: {address.postalCode}</p>
                       </div>
                       <div className="space-x-2">
                         <Button variant="ghost" size="sm">Edit</Button>
