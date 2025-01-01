@@ -1,26 +1,39 @@
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { AppDispatch } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { fetchAddresses } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
 import { removeFromLocalCart, updateLocalQuantity } from '@/features/cart/localCartSlice';
 import { Check, CreditCard, MapPin, Minus, Plus, ShoppingCart, Trash2, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 
 const CheckoutStepper = () => {
   // const [currentStep, setCurrentStep] = useState(0);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const {items: addresses, status, error} = useAppSelector((state) => state.addresses);
   const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const { items } = useAppSelector((state) => state.localCart);
   const [nextButtonActive, setNextButtonActive] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState<string>("");
+
+  const handleAddressChange = (addressId: string) => {
+    setSelectedAddress(addressId);
+    if (onAddressSelect) {
+      onAddressSelect(addressId);
+    }
+  };
 
   useEffect(() => {
     setCurrentStep(0);
-  }, [items]);
+    // dispatch(fetchAddresses());
+  }, []);
 
 
   const [currentStep, setCurrentStep] = useState(() => {
@@ -167,28 +180,61 @@ const CheckoutStepper = () => {
 
   // ... rest of the component remains the same (ShippingForm, AccountForm, PaymentForm, Confirmation)
   const ShippingForm = () => (
-    <div className="space-y-4">
-      <div className="grid gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="address">Street Address</Label>
-          <Input id="address" placeholder="Enter your street address" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input id="city" placeholder="City" />
+    <Card className="w-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <CardTitle>Shipping Addresses</CardTitle>
+        <Button variant="outline" size="sm">
+          <Plus className="mr-2 h-4 w-4" />
+          Add New Address
+        </Button>
+      </CardHeader>
+      <CardContent>
+        {addresses.length > 0 ? (
+          <RadioGroup
+            value={selectedAddress}
+            onValueChange={handleAddressChange}
+            className="w-full"
+          >
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-12"></TableHead>
+                  <TableHead>Street Address</TableHead>
+                  <TableHead>City</TableHead>
+                  <TableHead>Postal Code</TableHead>
+                  <TableHead>Country</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {addresses.map((address) => (
+                  <TableRow key={address.addressId}>
+                    <TableCell className="w-12">
+                      <RadioGroupItem
+                        value={address.addressId}
+                        id={address.addressId}
+                        className="mt-1"
+                      />
+                    </TableCell>
+                    <TableCell>{address.addressLine1}</TableCell>
+                    <TableCell>{address.city}</TableCell>
+                    <TableCell>{address.postalCode}</TableCell>
+                    <TableCell>{address.country}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </RadioGroup>
+        ) : (
+          <div className="text-center py-6 text-gray-500">
+            No saved addresses found. Add a new address to continue.
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="postal">Postal Code</Label>
-            <Input id="postal" placeholder="Postal Code" />
-          </div>
-        </div>
-      </div>
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 
-  const AccountForm = () => {
-    return <div className="text-center space-y-4">
+  const AccountForm = () => (
+    <div className="text-center space-y-4">
       <h3 className="text-xl font-medium">Account Required</h3>
       <p className="text-gray-500">Please log in or create an account to continue checkout.</p>
       <Button
@@ -198,7 +244,7 @@ const CheckoutStepper = () => {
         Continue to Login
       </Button>
     </div>
-  };
+  );
 
   const PaymentForm = () => (
     <div className="space-y-4">
