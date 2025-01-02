@@ -1,20 +1,25 @@
-import { CalendarDays, User } from "lucide-react"
+import { CalendarDays, User } from "lucide-react";
 
+import { useAppSelector } from "@/app/hooks";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { useAppSelector } from "@/app/hooks";
+} from "@/components/ui/hover-card";
+import { keycloak } from "@/features/auth/authSlice";
 
 export function UserStatusHover() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    keycloak.logout();
+  };
 
   return (
     <HoverCard>
@@ -38,6 +43,11 @@ export function UserStatusHover() {
               </span>
             </div>
           </div>
+        </div>
+        <div className="mt-4 space-y-2">
+          <Button variant="outline" onClick={handleLogout}>
+            Logout
+          </Button>
         </div>
       </HoverCardContent>
     </HoverCard>
