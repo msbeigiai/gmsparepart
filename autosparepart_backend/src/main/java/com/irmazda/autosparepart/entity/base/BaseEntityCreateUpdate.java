@@ -1,4 +1,4 @@
-package com.irmazda.autosparepart.entity;
+package com.irmazda.autosparepart.entity.base;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+public class BaseEntityCreateUpdate {
   @CreatedDate
   @Column(updatable = false)
   private LocalDateTime createdAt = LocalDateTime.now();
