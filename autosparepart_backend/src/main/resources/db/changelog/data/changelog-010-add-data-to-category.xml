@@ -77,5 +77,45 @@
     </insert>
   </changeSet>
 
+<!-- Mock Data for Addresses -->
+  <changeSet id="003-insert-mock-addresses" author="Mohsen">
+    <insert tableName="addresses">
+        <column name="user_id" value="111e4567-e89b-12d3-a456-426614174000" />
+        <column name="address_line1" value="123 Main Street" />
+        <column name="city" value="Helsinki" />
+        <column name="postal_code" value="00100" />
+        <column name="country" value="Finland" />
+    </insert>
+    <insert tableName="addresses">
+        <column name="user_id" value="111e4567-e89b-12d3-a456-426614174001" />
+        <column name="address_line1" value="456 Elm Street" />
+        <column name="city" value="Espoo" />
+        <column name="postal_code" value="02100" />
+        <column name="country" value="Finland" />
+    </insert>
+    <insert tableName="addresses">
+        <column name="user_id" value="111e4567-e89b-12d3-a456-426614174002" />
+        <column name="address_line1" value="789 Oak Avenue" />
+        <column name="city" value="Vantaa" />
+        <column name="postal_code" value="01300" />
+        <column name="country" value="Finland" />
+    </insert>
+    <insert tableName="addresses">
+        <column name="user_id" value="111e4567-e89b-12d3-a456-426614174003" />
+        <column name="address_line1" value="101 Maple Lane" />
+        <column name="city" value="Tampere" />
+        <column name="postal_code" value="33100" />
+        <column name="country" value="Finland" />
+    </insert>
+    <insert tableName="addresses">
+        <column name="user_id" value="111e4567-e89b-12d3-a456-426614174004" />
+        <column name="address_line1" value="202 Pine Road" />
+        <column name="city" value="Turku" />
+        <column name="postal_code" value="20100" />
+        <column name="country" value="Finland" />
+    </insert>
+</changeSet>
+
+
 
 </databaseChangeLog>
