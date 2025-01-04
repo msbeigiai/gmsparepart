@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="015-create-moderation-action-table" author="Mohsen">
+        <createTable tableName="moderation_actions">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="review_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_moderation_review"
+                    references="reviews(id)" />
+            </column>
+            <column name="moderator_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_moderation_moderator"
+                    references="users(id)" />
+            </column>
+            <column name="decision" type="varchar(20)">
+                <constraints nullable="false" />
+            </column>
+            <column name="note" type="text" />
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

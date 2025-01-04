@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet id="016-create-indexes" author="Mohsen">
+        <createIndex indexName="idx_review_product_status" tableName="reviews">
+            <column name="product_id" />
+            <column name="status" />
+        </createIndex>
+
+        <createIndex indexName="idx_review_user" tableName="reviews">
+            <column name="user_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_review_created" tableName="reviews">
+            <column name="created_at" />
+        </createIndex>
+
+        <createIndex indexName="idx_media_review" tableName="review_media">
+            <column name="review_id" />
+        </createIndex>
+
+        <createIndex indexName="idx_helpfulness_review" tableName="review_helpfulness">
+            <column name="review_id" />
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
