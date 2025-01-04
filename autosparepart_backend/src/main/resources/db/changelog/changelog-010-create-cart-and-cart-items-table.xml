@@ -1,56 +1,56 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Create Cart Table -->
     <changeSet id="010-create-cart-table" author="developer">
         <createTable tableName="cart">
             <column name="cart_id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="user_id" type="UUID">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
         </createTable>
 
         <addForeignKeyConstraint baseTableName="cart"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_cart_user"
-                                 referencedTableName="users"
-                                 referencedColumnNames="user_id"/>
+            baseColumnNames="user_id"
+            constraintName="fk_cart_user"
+            referencedTableName="users"
+            referencedColumnNames="user_id" />
     </changeSet>
 
     <!-- Create Cart Items Table -->
     <changeSet id="011-create-cart-items-table" author="developer">
         <createTable tableName="cart_items">
             <column name="cart_item_id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="cart_id" type="BIGINT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="product_id" type="UUID">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
             <column name="quantity" type="INT">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
-            <column name="added_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="added_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
         </createTable>
 
         <addForeignKeyConstraint baseTableName="cart_items"
-                                 baseColumnNames="cart_id"
-                                 constraintName="fk_cart_items_cart"
-                                 referencedTableName="cart"
-                                 referencedColumnNames="cart_id"/>
+            baseColumnNames="cart_id"
+            constraintName="fk_cart_items_cart"
+            referencedTableName="cart"
+            referencedColumnNames="cart_id" />
 
         <addForeignKeyConstraint baseTableName="cart_items"
-                                 baseColumnNames="product_id"
-                                 constraintName="fk_cart_items_product"
-                                 referencedTableName="products"
-                                 referencedColumnNames="product_id"/>
+            baseColumnNames="product_id"
+            constraintName="fk_cart_items_product"
+            referencedTableName="products"
+            referencedColumnNames="product_id" />
     </changeSet>
 
 </databaseChangeLog>
