@@ -1,5 +1,7 @@
 package com.irmazda.autosparepart.entity;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categories")
-public class Category extends BaseEntity {
+public class Category extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
