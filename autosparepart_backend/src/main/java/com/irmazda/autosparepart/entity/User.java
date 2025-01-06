@@ -2,6 +2,8 @@ package com.irmazda.autosparepart.entity;
 
 import java.util.UUID;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

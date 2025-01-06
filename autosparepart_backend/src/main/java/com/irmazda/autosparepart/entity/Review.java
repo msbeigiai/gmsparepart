@@ -134,9 +134,5 @@ public class Review extends BaseEntityCreateUpdate {
   public void setHelpfulnessVotes(List<ReviewHelpfulness> helpfulnessVotes) {
     this.helpfulnessVotes = helpfulnessVotes;
   }
- 
-  
-
-
 
 }

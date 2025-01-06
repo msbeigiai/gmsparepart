@@ -2,6 +2,8 @@ package com.irmazda.autosparepart.entity;
 
 import java.math.BigDecimal;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_items")
-public class OrderItem extends BaseEntity {
+public class OrderItem extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

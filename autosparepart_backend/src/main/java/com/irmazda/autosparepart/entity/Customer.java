@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+
 @Entity
 @Table(name = "customers")
-public class Customer extends BaseEntity {
+public class Customer extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

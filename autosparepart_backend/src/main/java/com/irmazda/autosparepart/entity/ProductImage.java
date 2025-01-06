@@ -2,11 +2,13 @@ package com.irmazda.autosparepart.entity;
 
 import java.util.UUID;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "product_images")
-public class ProductImage extends BaseEntity {
+public class ProductImage extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

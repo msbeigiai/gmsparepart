@@ -3,6 +3,7 @@ package com.irmazda.autosparepart.entity;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "addresses")
-public class Address extends BaseEntity {
+public class Address extends BaseEntityCreateUpdate {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
