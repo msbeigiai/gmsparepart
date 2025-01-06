@@ -9,13 +9,13 @@
             <column name="id" type="uuid">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="review_id" type="uuid">
+            <column name="review_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_moderation_review"
                     references="reviews(id)" />
             </column>
-            <column name="moderator_id" type="uuid">
+            <column name="user_id" type="uuid">
                 <constraints nullable="false" foreignKeyName="fk_moderation_moderator"
-                    references="users(id)" />
+                    references="users(user_id)" />
             </column>
             <column name="decision" type="varchar(20)">
                 <constraints nullable="false" />

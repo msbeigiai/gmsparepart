@@ -207,7 +207,7 @@
     <insert tableName="moderation_actions">
       <column name="id">123e4567-e89b-12d3-a456-426614174008</column>
       <column name="review_id">1</column>
-      <column name="moderator_id">123e4567-e89b-12d3-a456-426614174000</column>
+      <column name="user_id">cd2d0e4a-6e2b-469a-b778-85c0cde19635</column>
       <column name="decision">APPROVE</column>
       <column name="note">Review meets all guidelines</column>
       <column name="created_at">2024-01-02 10:30:00</column>
