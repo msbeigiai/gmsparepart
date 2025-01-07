@@ -20,6 +20,9 @@ spring:
           issuer-uri: "http://localhost:8080/realms/irmazda"
 
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: true
