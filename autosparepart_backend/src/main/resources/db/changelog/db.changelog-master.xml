@@ -16,7 +16,10 @@
    <include file="db/changelog/changelog-010-create-cart-and-cart-items-table.xml" />
    <include file="db/changelog/changelog-011-create-favorites-table.xml" />
    <include file="db/changelog/changelog-012-create-review-table.xml" />
-
+   <include file="db/changelog/changelog-013-create-review-media-table.xml" />
+   <include file="db/changelog/changelog-014-create-review-helpfulness-table.xml" />
+   <include file="db/changelog/changelog-015-create-moderation-action-table.xml" />
+   <include file="db/changelog/changelog-016-create-indexes.xml" />
    
    <include file="db/changelog/data/changelog-010-add-data-to-db.xml" />
 
