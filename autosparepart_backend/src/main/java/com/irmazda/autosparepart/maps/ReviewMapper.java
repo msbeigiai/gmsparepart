@@ -10,9 +10,11 @@ import java.util.List;
 @Component
 public class ReviewMapper {
 
-  public static ReviewDTO toDTO(Review review) {
-    List<String> mediaUrls = 
-      review.getReviewMedias().stream().map(ReviewMedia::getMediaUrl).toList();
+  public ReviewMapper() {
+  }
+
+  public ReviewDTO toDTO(Review review, List<ReviewMedia> reviewMedias) {
+    List<String> mediaUrls = reviewMedias.stream().map(ReviewMedia::getMediaUrl).toList();
     return new ReviewDTO(
       review.getId(),
      review.getProduct().getProductId(),

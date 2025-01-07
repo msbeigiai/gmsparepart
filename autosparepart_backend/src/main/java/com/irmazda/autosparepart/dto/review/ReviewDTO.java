@@ -2,31 +2,43 @@ package com.irmazda.autosparepart.dto.review;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class ReviewDTO {
   private Long id;
-  private Long productId;
-  private String userName;
+  private UUID productId;
+  private String username;
   private Integer rating;
   private String reviewText;
   private boolean verifiedPurchase;
   private List<String> mediaUrls;
   private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
   private int helpfulVotes;
 
   public ReviewDTO() {
   }
 
-  public ReviewDTO(Long id, Long productId, String userName, Integer rating, String reviewText, boolean verifiedPurchase,
-      List<String> mediaUrls, LocalDateTime createdAt, int helpfulVotes) {
+  public ReviewDTO(
+      Long id,
+      UUID productId,
+      String username,
+      Integer rating,
+      String reviewText,
+      boolean verifiedPurchase,
+      List<String> mediaUrls,
+      LocalDateTime createdAt,
+      LocalDateTime updatedAt,
+      int helpfulVotes) {
     this.id = id;
     this.productId = productId;
-    this.userName = userName;
+    this.username = username;
     this.rating = rating;
     this.reviewText = reviewText;
     this.verifiedPurchase = verifiedPurchase;
     this.mediaUrls = mediaUrls;
     this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
     this.helpfulVotes = helpfulVotes;
   }
 
@@ -38,20 +50,20 @@ public class ReviewDTO {
     this.id = id;
   }
 
-  public Long getProductId() {
+  public UUID getProductId() {
     return productId;
   }
 
-  public void setProductId(Long productId) {
+  public void setProductId(UUID productId) {
     this.productId = productId;
   }
 
-  public String getUserName() {
-    return userName;
+  public String getUsername() {
+    return username;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public Integer getRating() {
@@ -94,6 +106,14 @@ public class ReviewDTO {
     this.createdAt = createdAt;
   }
 
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
   public int getHelpfulVotes() {
     return helpfulVotes;
   }
@@ -102,5 +122,4 @@ public class ReviewDTO {
     this.helpfulVotes = helpfulVotes;
   }
 
-  
 }
