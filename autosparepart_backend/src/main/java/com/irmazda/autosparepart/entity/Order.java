@@ -2,21 +2,15 @@ package com.irmazda.autosparepart.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.irmazda.autosparepart.entity.enums.OrderStatus;
+import com.irmazda.autosparepart.entity.enums.ReviewStatus;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "orders")
@@ -32,7 +26,7 @@ public class Order extends BaseEntityCreateUpdate {
   private User user;
 
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OrderItem> orderItems;
+  private List<OrderItem> orderItems = new ArrayList<>();
 
   @Column(name = "order_date", nullable = false, updatable = false)
   private LocalDateTime orderDate;
@@ -40,13 +34,14 @@ public class Order extends BaseEntityCreateUpdate {
   @Column(name = "total_amount", nullable = false)
   private BigDecimal totalAmount;
 
-  @Column(name = "status", nullable = false)
-  private String status;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status")
+  private OrderStatus status;
 
   public Order() {
   }
 
-  public Order(User user, LocalDateTime orderDate, BigDecimal totalAmount, String status) {
+  public Order(User user, LocalDateTime orderDate, BigDecimal totalAmount, OrderStatus status) {
     this.user = user;
     this.orderDate = orderDate;
     this.totalAmount = totalAmount;
@@ -91,11 +86,16 @@ public class Order extends BaseEntityCreateUpdate {
   }
 
   public String getStatus() {
-    return status;
+    return status.toString();
   }
 
-  public void setStatus(String status) {
+  public void setStatus(OrderStatus status) {
     this.status = status;
+  }
+
+  public boolean hasProductId(UUID productId) {
+    return !orderItems.stream().filter(
+            orderItem -> orderItem.getProduct().getProductId().equals(productId)).toList().isEmpty();
   }
 
 }
