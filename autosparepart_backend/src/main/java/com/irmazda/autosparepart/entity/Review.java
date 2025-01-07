@@ -44,23 +44,31 @@ public class Review extends BaseEntityCreateUpdate {
   @Enumerated(EnumType.STRING)
   private ReviewStatus status;
 
-  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ReviewMedia> reviewMedias;
 
-  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private List<ReviewHelpfulness> helpfulnessVotes;
 
   public Review() {
   }
 
-  public Review(Product product, User user, Integer rating, String reviewText, boolean verifiedPurchase,
-      ReviewStatus status) {
+  public Review(Product product,
+                User user,
+                Integer rating,
+                String reviewText,
+                boolean verifiedPurchase,
+                ReviewStatus status,
+                List<ReviewMedia> reviewMedias,
+                List<ReviewHelpfulness> helpfulnessVotes) {
     this.product = product;
     this.user = user;
     this.rating = rating;
     this.reviewText = reviewText;
     this.verifiedPurchase = verifiedPurchase;
     this.status = status;
+    this.reviewMedias = reviewMedias;
+    this.helpfulnessVotes = helpfulnessVotes;
   }
 
   public Long getId() {
