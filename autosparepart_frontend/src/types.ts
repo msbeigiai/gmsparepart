@@ -13,3 +13,15 @@ export interface CartItem {
 export interface Cart {
   items: CartItem[];
 }
+
+export interface Review {
+  id: number;
+  productId: string;
+  username: string;
+  rating: number;
+  reviewText: string;
+  verifiedPurchase: boolean;
+  createdAt: string;
+  updatedAt: string;
+  helpfulVotes: number;
+}
