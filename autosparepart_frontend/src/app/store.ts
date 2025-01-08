@@ -4,6 +4,7 @@ import authReducer from '../features/auth/authSlice';
 import cartReducer from '../features/cart/cartSlice';
 import localCartReducer from '../features/cart/localCartSlice';
 import addressReducer from '../features/address/addressSlice';
+import reviewReducer from "../features/review/reviewSlice";
 
 export const store = configureStore({
   reducer:{
@@ -12,6 +13,7 @@ export const store = configureStore({
     carts: cartReducer,
     localCart: localCartReducer,
     addresses: addressReducer,
+    reviews: reviewReducer,
   }
 });
 
