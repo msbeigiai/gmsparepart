@@ -15,6 +15,7 @@ import com.irmazda.autosparepart.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -59,6 +60,13 @@ public class ProductServiceImpl implements ProductService {
             .stream()
             .map(ProductToProductResponseDTO::mapFrom)
             .toList();
+  }
+
+  @Override
+  public ProductResponseDTO getProductById(UUID productId) {
+    return productRepository.findById(productId)
+            .map(ProductToProductResponseDTO::mapFrom)
+            .orElseThrow(()-> new RuntimeException("Product not found"));
   }
 
 }
