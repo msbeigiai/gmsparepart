@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
     <changeSet id="012-create-review-table" author="Mohsen">
         <createTable tableName="reviews">
             <column name="id" type="SERIAL" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" />
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="product_id" type="UUID">
                 <constraints nullable="false" foreignKeyName="fk_review_product"
-                    references="products(product_id)" />
+                             references="products(product_id)"/>
             </column>
             <column name="user_id" type="UUID">
                 <constraints nullable="false" foreignKeyName="fk_review_user"
-                    references="users(user_id)" />
+                             references="users(user_id)"/>
             </column>
             <column name="rating" type="int">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(256)">
+                <constraints nullable="false"/>
             </column>
             <column name="review_text" type="text">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="verified_purchase" type="boolean" defaultValueBoolean="false">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="status" type="varchar(20)" defaultValue="PENDING">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="timestamp" />
+            <column name="updated_at" type="timestamp"/>
         </createTable>
     </changeSet>
 

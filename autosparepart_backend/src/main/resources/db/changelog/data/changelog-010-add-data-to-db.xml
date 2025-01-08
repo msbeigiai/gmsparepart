@@ -163,6 +163,7 @@
       <column name="product_id">a111e7c8-b3b5-4b1d-84cf-98765ff00101</column>
       <column name="user_id">cd2d0e4a-6e2b-469a-b778-85c0cde19635</column>
       <column name="rating">5</column>
+      <column name="title">Test title</column>
       <column name="review_text">Great smartphone with excellent features!</column>
       <column name="verified_purchase">true</column>
       <column name="status">PUBLISHED</column>
@@ -174,6 +175,7 @@
       <column name="product_id">b222d7a9-c3f7-4c2e-b0e3-98765ff00202</column>
       <column name="user_id">b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22</column>
       <column name="rating">4</column>
+      <column name="title">Test title</column>
       <column name="review_text">Good laptop but a bit pricey.</column>
       <column name="verified_purchase">true</column>
       <column name="status">PUBLISHED</column>
@@ -195,7 +197,7 @@
 
     <!-- Review Helpfulness mock data -->
     <insert tableName="review_helpfulness">
-      <column name="id">123e4567-e89b-12d3-a456-426614174007</column>
+      <column name="id">1</column>
       <column name="review_id">1</column>
       <column name="user_id">cd2d0e4a-6e2b-469a-b778-85c0cde19635</column>
       <column name="helpful">true</column>
