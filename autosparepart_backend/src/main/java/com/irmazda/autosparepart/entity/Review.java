@@ -36,6 +36,8 @@ public class Review extends BaseEntityCreateUpdate {
 
   private Integer rating;
 
+  private String title;
+
   @Column(columnDefinition = "TEXT")
   private String reviewText;
 
@@ -56,6 +58,7 @@ public class Review extends BaseEntityCreateUpdate {
   public Review(Product product,
                 User user,
                 Integer rating,
+                String title,
                 String reviewText,
                 boolean verifiedPurchase,
                 ReviewStatus status,
@@ -64,6 +67,7 @@ public class Review extends BaseEntityCreateUpdate {
     this.product = product;
     this.user = user;
     this.rating = rating;
+    this.title = title;
     this.reviewText = reviewText;
     this.verifiedPurchase = verifiedPurchase;
     this.status = status;
@@ -133,6 +137,14 @@ public class Review extends BaseEntityCreateUpdate {
 
   public void setReviewMedias(List<ReviewMedia> reviewMedias) {
     this.reviewMedias = reviewMedias;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public List<ReviewHelpfulness> getHelpfulnessVotes() {

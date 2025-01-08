@@ -8,6 +8,7 @@ public class ReviewDTO {
   private Long id;
   private UUID productId;
   private String username;
+  private String title;
   private Integer rating;
   private String reviewText;
   private boolean verifiedPurchase;
@@ -20,19 +21,20 @@ public class ReviewDTO {
   }
 
   public ReviewDTO(
-      Long id,
-      UUID productId,
-      String username,
-      Integer rating,
-      String reviewText,
-      boolean verifiedPurchase,
-      List<String> mediaUrls,
-      LocalDateTime createdAt,
-      LocalDateTime updatedAt,
-      int helpfulVotes) {
+          Long id,
+          UUID productId,
+          String username, String title,
+          Integer rating,
+          String reviewText,
+          boolean verifiedPurchase,
+          List<String> mediaUrls,
+          LocalDateTime createdAt,
+          LocalDateTime updatedAt,
+          int helpfulVotes) {
     this.id = id;
     this.productId = productId;
     this.username = username;
+    this.title = title;
     this.rating = rating;
     this.reviewText = reviewText;
     this.verifiedPurchase = verifiedPurchase;
@@ -122,4 +124,11 @@ public class ReviewDTO {
     this.helpfulVotes = helpfulVotes;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
 }

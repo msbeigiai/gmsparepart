@@ -3,15 +3,13 @@ package com.irmazda.autosparepart.service.impl;
 import com.irmazda.autosparepart.dto.review.ReviewDTO;
 import com.irmazda.autosparepart.dto.review.ReviewRequest;
 import com.irmazda.autosparepart.entity.Review;
+import com.irmazda.autosparepart.entity.ReviewHelpfulness;
 import com.irmazda.autosparepart.entity.ReviewMedia;
 import com.irmazda.autosparepart.entity.User;
 import com.irmazda.autosparepart.entity.enums.OrderStatus;
 import com.irmazda.autosparepart.entity.enums.ReviewStatus;
 import com.irmazda.autosparepart.maps.ReviewMapper;
-import com.irmazda.autosparepart.repository.OrderRepository;
-import com.irmazda.autosparepart.repository.ProductRepository;
-import com.irmazda.autosparepart.repository.ReviewMediaRepository;
-import com.irmazda.autosparepart.repository.ReviewRepository;
+import com.irmazda.autosparepart.repository.*;
 import com.irmazda.autosparepart.service.ReviewService;
 import com.irmazda.autosparepart.service.UserService;
 import org.springframework.data.domain.Page;
@@ -35,29 +33,31 @@ public class ReviewServiceImpl implements ReviewService {
   private final ReviewMapper reviewMapper;
   private final OrderRepository orderRepository;
   private final ReviewMediaRepository reviewMediaRepository;
+  private final ReviewHelpfulnessRepository reviewHelpfulnessRepository;
 
   public ReviewServiceImpl(UserService userService,
                            ReviewRepository reviewRepository,
                            ProductRepository productRepository,
                            ReviewMapper reviewMapper,
-                           OrderRepository orderRepository, ReviewMediaRepository reviewMediaRepository) {
+                           OrderRepository orderRepository,
+                           ReviewMediaRepository reviewMediaRepository, ReviewHelpfulnessRepository reviewHelpfulnessRepository) {
     this.userService = userService;
     this.reviewRepository = reviewRepository;
     this.productRepository = productRepository;
     this.reviewMapper = reviewMapper;
     this.orderRepository = orderRepository;
     this.reviewMediaRepository = reviewMediaRepository;
+    this.reviewHelpfulnessRepository = reviewHelpfulnessRepository;
   }
 
   @Override
   public Page<ReviewDTO> getProductReviews(UUID productId, Pageable pageable) {
-
-    List<Review> reviews = reviewRepository.findByProductId(productId, pageable).stream().toList();
-    List<ReviewDTO> list = reviews.stream().map(review -> {
+    Page<Review> reviews = reviewRepository.findByProductId(productId, pageable);
+    return reviews.map(review -> {
       List<ReviewMedia> reviewMedias = reviewMediaRepository.findByReviewId(review.getId());
-      return reviewMapper.toDTO(review, reviewMedias);
-    }).toList();
-    return Page.empty();
+      List<ReviewHelpfulness> reviewHelpfulnesses = reviewHelpfulnessRepository.findByReviewId(review.getId());
+      return reviewMapper.toDTO(review, reviewMedias, reviewHelpfulnesses);
+    });
   }
 
   @Override
@@ -67,6 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
             productRepository.getReferenceById(productId),
             currentUser,
             request.getRating(),
+            request.getTitle(),
             request.getReviewText(),
             checkVerifiedPurchase(productId, currentUser),
             ReviewStatus.PENDING,
@@ -75,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
     );
 
     review = reviewRepository.save(review);
-    return reviewMapper.toDTO(review, List.of());
+    return reviewMapper.toDTO(review, List.of(), List.of());
   }
 
   private boolean checkVerifiedPurchase(UUID productId, User user) {
