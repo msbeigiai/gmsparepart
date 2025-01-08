@@ -4,6 +4,8 @@ import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.entity.OrderItem;
 import com.irmazda.autosparepart.entity.Product;
 import com.irmazda.autosparepart.entity.User;
+import com.irmazda.autosparepart.entity.enums.OrderStatus;
+import com.irmazda.autosparepart.entity.enums.ReviewStatus;
 import com.irmazda.autosparepart.repository.OrderRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.OrderService;
@@ -29,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     Order order = new Order();
     order.setUser(user);
     order.setOrderDate(LocalDateTime.now());
-    order.setStatus("Pending");
+    order.setStatus(OrderStatus.PENDING);
 
     for (OrderItem item : items) {
       Product product = productRepository.findById(item.getProduct().getProductId())
