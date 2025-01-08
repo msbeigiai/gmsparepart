@@ -3,30 +3,24 @@ package com.irmazda.autosparepart.entity;
 import com.irmazda.autosparepart.entity.base.BaseEntityCreate;
 import com.irmazda.autosparepart.entity.enums.MediaType;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "review_media") 
 public class ReviewMedia extends BaseEntityCreate {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "review_id", nullable = false)
   private Review review;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "type")
   private MediaType mediaType;
 
   private String mediaUrl;
@@ -47,11 +41,11 @@ public class ReviewMedia extends BaseEntityCreate {
     this.contentType = contentType;
   }
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

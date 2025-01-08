@@ -1,7 +1,9 @@
 package com.irmazda.autosparepart.dto.review;
 
+import java.util.UUID;
+
 public class ReviewMediaDTO {
-  private Long id;
+  private UUID id;
   private String mediaType;
   private String mediaUrl;
   private String thumbnailUrl;
@@ -9,18 +11,18 @@ public class ReviewMediaDTO {
   public ReviewMediaDTO() {
   }
 
-  public ReviewMediaDTO(Long id, String mediaType, String mediaUrl, String thumbnailUrl) {
+  public ReviewMediaDTO(UUID id, String mediaType, String mediaUrl, String thumbnailUrl) {
     this.id = id;
     this.mediaType = mediaType;
     this.mediaUrl = mediaUrl;
     this.thumbnailUrl = thumbnailUrl;
   }
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
