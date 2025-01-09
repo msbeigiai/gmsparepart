@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+import com.irmazda.autosparepart.dto.favorite.FavoriteDTO;
 import org.springframework.stereotype.Service;
 
 import com.irmazda.autosparepart.entity.Favorite;
@@ -18,16 +19,18 @@ public class FavoriteServiceImpl implements FavoriteService {
 
   private final FavoriteRepository favoriteRepository;
   private final UserService userService;
-  
+
   public FavoriteServiceImpl(FavoriteRepository favoriteRepository, UserService userService) {
     this.favoriteRepository = favoriteRepository;
     this.userService = userService;
   }
-  
+
   @Override
-  public List<Favorite> getUserFavorites(Principal principal) {
+  public List<FavoriteDTO> getUserFavorites(Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
-    return favoriteRepository.findByUser_UserId(user.getUserId());
+    List<Favorite> favorites = favoriteRepository.findByUser_UserId(user.getUserId());
+    return favorites.stream()
+            .map(favorite -> new FavoriteDTO(favorite.getProduct().getProductId().toString())).toList();
   }
 
   @Override
