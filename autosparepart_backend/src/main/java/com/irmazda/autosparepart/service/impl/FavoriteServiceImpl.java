@@ -13,6 +13,7 @@ import com.irmazda.autosparepart.entity.User;
 import com.irmazda.autosparepart.repository.FavoriteRepository;
 import com.irmazda.autosparepart.service.FavoriteService;
 import com.irmazda.autosparepart.service.UserService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FavoriteServiceImpl implements FavoriteService {
@@ -34,7 +35,7 @@ public class FavoriteServiceImpl implements FavoriteService {
   }
 
   @Override
-  public Favorite addFavorite(UUID productId, Principal principal) {
+  public void addFavorite(UUID productId, Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
     if (favoriteRepository.existsByUserAndProduct(user.getUserId(), productId)) {
       throw new IllegalArgumentException("Product already in favorites");
@@ -44,13 +45,17 @@ public class FavoriteServiceImpl implements FavoriteService {
     favorite.setUser(new User(user.getUserId()));
     favorite.setProduct(new Product(productId));
 
-    return favoriteRepository.save(favorite);
+    favoriteRepository.save(favorite);
   }
 
   @Override
+  @Transactional
   public void removeFavorite(UUID productId, Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
-    favoriteRepository.deleteByUserAndProduct(user.getUserId(), productId);
+    if (favoriteRepository.existsByUserAndProduct(user.getUserId(), productId)) {
+      favoriteRepository.deleteByUserAndProduct(user.getUserId(), productId);
+    } else {
+      throw new IllegalArgumentException("Product is not in favorite list");
+    }
   }
-
 }
