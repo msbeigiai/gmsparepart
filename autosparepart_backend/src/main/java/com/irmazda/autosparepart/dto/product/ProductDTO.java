@@ -1,19 +1,35 @@
 package com.irmazda.autosparepart.dto.product;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ProductDTO {
 
+  private UUID productId;
   private String name;
   private String description;
   private BigDecimal price;
   private int stockQuantity;
+  private Long categoryId;
+  private String image;
 
-  public ProductDTO(String name, String description, BigDecimal price, int stockQuantity) {
+  public ProductDTO() {
+  }
+
+  public ProductDTO(UUID productId,
+                    String name,
+                    String description,
+                    BigDecimal price,
+                    int stockQuantity,
+                    Long countInCategory,
+                    String image) {
+    this.productId = productId;
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
+    this.categoryId = countInCategory;
+    this.image = image;
   }
 
   public String getName() {
@@ -46,5 +62,29 @@ public class ProductDTO {
 
   public void setStockQuantity(int stockQuantity) {
     this.stockQuantity = stockQuantity;
+  }
+
+  public Long getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(Long categoryId) {
+    this.categoryId = categoryId;
+  }
+
+  public UUID getProductId() {
+    return productId;
+  }
+
+  public void setProductId(UUID productId) {
+    this.productId = productId;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
   }
 }
