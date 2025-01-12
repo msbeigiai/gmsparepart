@@ -3,7 +3,7 @@ package com.irmazda.autosparepart.dto.product;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ProductRequestDTO {
+public class ProductRequest {
   private String name;
   private String description;
   private BigDecimal price;
@@ -11,8 +11,12 @@ public class ProductRequestDTO {
   private String categoryName;
   private List<ProductImageDTO> images;
 
-  public ProductRequestDTO(String name, String description, BigDecimal price, int stockQuantity, String categoryName,
-      List<ProductImageDTO> images) {
+  public ProductRequest(String name,
+                        String description,
+                        BigDecimal price,
+                        int stockQuantity,
+                        String categoryName,
+                        List<ProductImageDTO> images) {
     this.name = name;
     this.description = description;
     this.price = price;
