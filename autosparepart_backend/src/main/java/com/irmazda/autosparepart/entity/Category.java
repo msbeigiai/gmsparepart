@@ -2,12 +2,10 @@ package com.irmazda.autosparepart.entity;
 
 import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -20,6 +18,9 @@ public class Category extends BaseEntityCreateUpdate {
 
   @Column(name = "name", nullable = false)
   private String name;
+
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Product> products = new ArrayList<>();
 
   @Column(name = "description")
   private String description;
@@ -60,4 +61,11 @@ public class Category extends BaseEntityCreateUpdate {
     this.description = description;
   }
 
+  public List<Product> getProducts() {
+    return products;
+  }
+
+  public void setProducts(List<Product> products) {
+    this.products = products;
+  }
 }

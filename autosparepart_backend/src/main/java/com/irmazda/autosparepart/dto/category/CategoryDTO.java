@@ -3,13 +3,15 @@ package com.irmazda.autosparepart.dto.category;
 public class CategoryDTO {
   private Long id;
   private String name;
+  private Long productCount;
 
   public CategoryDTO() {
   }
 
-  public CategoryDTO(Long id, String name) {
+  public CategoryDTO(Long id, String name, Long productCount) {
     this.id = id;
     this.name = name;
+    this.productCount = productCount;
   }
 
   public Long getId() {
@@ -26,5 +28,13 @@ public class CategoryDTO {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Long getProductCount() {
+    return productCount;
+  }
+
+  public void setProductCount(Long productCount) {
+    this.productCount = productCount;
   }
 }

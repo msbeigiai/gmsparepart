@@ -9,7 +9,8 @@ public class CategoryMapper {
   public CategoryDTO mapTo(Category category) {
     return new CategoryDTO(
             category.getCategoryId(),
-            category.getName()
+            category.getName(),
+            (long) category.getProducts().size()
     );
   }
 }
