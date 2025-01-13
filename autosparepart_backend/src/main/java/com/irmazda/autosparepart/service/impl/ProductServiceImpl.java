@@ -82,4 +82,10 @@ public class ProductServiceImpl implements ProductService {
     return products.stream().map(productMapper::mapTo).toList();
   }
 
+  @Override
+  public List<ProductDTO> getByCategoryIds(List<Long> categoryIds) {
+    List<Product> products = productRepository.findByCategoryIds(categoryIds);
+    return products.stream().map(productMapper::mapTo).toList();
+  }
+
 }

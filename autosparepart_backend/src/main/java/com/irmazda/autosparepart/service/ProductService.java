@@ -16,4 +16,6 @@ public interface ProductService {
   Long getProductCategoryCount(Long categoryId);
 
   List<ProductDTO> getProductsByCategory(Long categoryId);
+
+  List<ProductDTO> getByCategoryIds(List<Long> categoryIds);
 }

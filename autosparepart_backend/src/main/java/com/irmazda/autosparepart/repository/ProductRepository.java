@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
   @Query(value = "SELECT *  FROM products WHERE category_id = :categoryId", nativeQuery = true)
   List<Product> getProductsByCategoryId(@Param("categoryId") Long categoryId);
+
+  @Query(value = "SELECT * FROM products WHERE (:categoryIds IS NULL OR category_id IN :categoryIds)", nativeQuery = true)
+  List<Product> findByCategoryIds(@Param("categoryIds") List<Long> categoryIds);
 }
