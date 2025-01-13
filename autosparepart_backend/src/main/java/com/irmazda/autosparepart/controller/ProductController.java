@@ -51,4 +51,9 @@ public class ProductController {
     return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
   }
 
+  @GetMapping("/categories")
+  public ResponseEntity<List<ProductDTO>> getByCategoryIds(@RequestParam("categoryIds") List<Long> categoryIds) {
+    return ResponseEntity.ok(productService.getByCategoryIds(categoryIds));
+  }
+
 }
