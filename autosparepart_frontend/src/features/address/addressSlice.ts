@@ -1,13 +1,7 @@
+import { Address } from "@/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface Address {
-  addressId: string;
-  addressLine1: string;
-  city: string;
-  postalCode: string;
-  country: string;
-}
 
 interface AddressState {
   items: Address[];
@@ -26,8 +20,6 @@ const API_BASE_URL = 'http://localhost:8081/api/v1/addresses';
 export const fetchAddresses = createAsyncThunk('addresses/fetchAddresses', async (_, { getState }) => {
   const state: any = getState();
   const token = state.auth.token;
-  console.log("TOKEN: ", token);
-  console.log("Full state:", getState());
   const response = await axios.get<Address[]>(API_BASE_URL, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -35,6 +27,25 @@ export const fetchAddresses = createAsyncThunk('addresses/fetchAddresses', async
   });
   return response.data;
 });
+
+interface AddressRequest {
+  addressLine1: string;
+  city: string;
+  postalCode: string
+}
+
+export const addAddress = createAsyncThunk('addresses/addAddresses', async ({ request }: { request: AddressRequest }, { getState }) => {
+  const state: any = getState();
+  const token = state.auth.token;
+  const response = await axios.post<string>(API_BASE_URL, request,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  return response.data;
+});
+
 
 const addressSlice = createSlice({
   name: 'addresses',
@@ -50,6 +61,17 @@ const addressSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(fetchAddresses.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Error fetching addresses';
+      })
+      .addCase(addAddress.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addAddress.fulfilled, (state, action: PayloadAction<string>) => {
+        state.status = 'succeeded';
+        console.log(action.payload);
+      })
+      .addCase(addAddress.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Error fetching addresses';
       })
