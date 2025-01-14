@@ -1,13 +1,12 @@
 package com.irmazda.autosparepart.entity;
 
+import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
-
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
