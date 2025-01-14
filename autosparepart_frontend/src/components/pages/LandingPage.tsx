@@ -19,6 +19,8 @@ import {
   Truck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import Products from "../Products";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -57,8 +59,8 @@ const LandingPage = () => {
                 Shop Now
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline">
-                Find Parts by Vehicle
+              <Button asChild size="lg" variant="outline" className="text-gray-700">
+                <Link to="/products">Find Parts by Vehicle</Link> 
               </Button>
             </div>
           </div>

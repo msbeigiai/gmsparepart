@@ -17,17 +17,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { getAllCategories } from '@/features/category/categorySlice';
-import { getProductsByCategory } from '@/features/products/productsSlice';
+import { fetchProducts, fetchProductsByCategoryIds } from '@/features/products/productsSlice';
+import { Category } from '@/types';
 import { ChevronDown, ChevronRight, Filter, Search, Tag, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-
-// interface Category {
-//   id: string;
-//   name: string;
-//   count: number;
-//   subcategories?: Category[];
-// }
+import { useState } from 'react';
 
 interface PriceRange {
   min: number;
@@ -43,44 +36,45 @@ const priceRanges: PriceRange[] = [
   { min: 500, max: Infinity, label: 'Over $500' }
 ];
 
-
 interface CategoryProductCount {
   id: number;
   name: string;
-  count: number;
-  subcategories?: CategoryProductCount[]
+  productCount: number;
+  subcategories?: CategoryProductCount[];
 }
 
 const CategorySidebar = () => {
   const dispatch = useAppDispatch();
   const { items: categories } = useAppSelector((state) => state.categories);
-  const { items: products } = useAppSelector((state) => state.products);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<PriceRange[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch(getAllCategories());
-  }, []);
-
-  const categoriesWithCount: CategoryProductCount[] = categories.map((category) => {
-    const productCount = products.filter((product) => (product.categoryId === category.id));
-
-    return { id: category.id, name: category.name, count: productCount.length };
-  });
-
-  console.log("CATTTT: ", categoriesWithCount)
-  console.log("PRODUCTS: ", products)
-
   const handleCategoryClick = (categoryId: string) => {
-    dispatch(getProductsByCategory({ categoryId: Number(categoryId) }));
-    setSelectedCategories(prev =>
-      prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
+    const selectedCategory = categories.find(
+      (category) => category.id.toString() === categoryId
     );
+    if (selectedCategory) {
+      setSelectedCategories((prev) => {
+        const updatedCategories = [...prev, selectedCategory];
+        const updatedCategoryIds = updatedCategories.map((cat) => cat.id.toString());
+        dispatch(fetchProductsByCategoryIds({ categoryIds: updatedCategoryIds }));
+        return updatedCategories;
+      });
+    }
+  };
+
+  const removeSelectedCategory = (categoryId: string) => {
+    setSelectedCategories((prev) => {
+      const updatedCategories = prev.filter(
+        (category) => category.id.toString() !== categoryId
+      );
+      const updatedCategoryIds = updatedCategories.map((cat) => cat.id.toString());
+      dispatch(fetchProductsByCategoryIds({ categoryIds: updatedCategoryIds }));
+      return updatedCategories;
+    });
   };
 
   const handlePriceRangeClick = (priceRange: PriceRange) => {
@@ -103,15 +97,16 @@ const CategorySidebar = () => {
     setSelectedCategories([]);
     setSelectedPriceRanges([]);
     setSearchQuery('');
+    dispatch(fetchProducts());
   };
 
-  const filteredCategories = categoriesWithCount.filter(category =>
-    category.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    !selectedCategories.find(selected => selected.id === category.id)
   );
 
   const CategoryTree = ({ category }: { category: CategoryProductCount }) => {
     const isExpanded = expandedCategories.includes(category.id.toString());
-    const isSelected = selectedCategories.includes(category.id.toString());
 
     return (
       <div className="mb-1">
@@ -131,13 +126,12 @@ const CategorySidebar = () => {
             </Button>
           )}
           <div
-            className={`flex items-center justify-between w-full cursor-pointer p-2 rounded-md hover:bg-accent ${isSelected ? 'bg-accent' : ''
-              }`}
+            className="flex items-center justify-between w-full cursor-pointer p-2 rounded-md hover:bg-accent"
             onClick={() => handleCategoryClick(category.id.toString())}
           >
             <span className="text-sm">{category.name}</span>
             <Badge variant="secondary" className="ml-2">
-              {category.count}
+              {category.productCount}
             </Badge>
           </div>
         </div>
@@ -165,21 +159,38 @@ const CategorySidebar = () => {
           />
         </div>
 
-        {(selectedCategories.length > 0 || selectedPriceRanges.length > 0) && (
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Active Filters</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearFilters}
-              className="h-8 text-muted-foreground hover:text-primary"
-            >
-              Clear all
-              <X className="ml-2 h-4 w-4" />
-            </Button>
+        {selectedCategories.length > 0 && (
+          <div className="space-y-2">
+            <span className="text-sm font-medium">Selected Categories</span>
+            <div className="flex flex-wrap gap-2">
+              {selectedCategories.map(category => (
+                <Badge
+                  key={category.id}
+                  className="flex items-center gap-2 cursor-pointer"
+                  variant="secondary"
+                  onClick={() => removeSelectedCategory(category.id.toString())}
+                >
+                  {category.name}
+                  <X className="h-3 w-3" />
+                </Badge>
+              ))}
+            </div>
           </div>
         )}
 
+        <div className="flex items-center justify-between">
+          <Button variant="outline" disabled={selectedCategories.length === 0} size="sm" onClick={clearFilters}>
+            Clear Filters
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+          >
+            <Filter className="h-4 w-4" /> Filters
+          </Button>
+        </div>
         <ScrollArea className="h-[500px] pr-4">
           <div className="space-y-4">
             <Collapsible defaultOpen>
@@ -214,8 +225,7 @@ const CategorySidebar = () => {
                   {priceRanges.map((range, index) => (
                     <div
                       key={index}
-                      className={`flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-accent ${selectedPriceRanges.includes(range) ? 'bg-accent' : ''
-                        }`}
+                      className={`flex items-center justify-between p-2 rounded-md cursor-pointer hover:bg-accent ${selectedPriceRanges.includes(range) ? 'bg-accent' : ''}`}
                       onClick={() => handlePriceRangeClick(range)}
                     >
                       <span className="text-sm">{range.label}</span>
