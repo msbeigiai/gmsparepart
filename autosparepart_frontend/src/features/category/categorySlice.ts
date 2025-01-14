@@ -19,7 +19,7 @@ const API_BASE_URL = 'http://localhost:8081/api/v1/categories';
 export const getAllCategories = createAsyncThunk("categories/allCategories", async (_, {getState}) => {
   const state: any = getState();
   const products = state.products;
-  const response = await axios.get<Category[]>(API_BASE_URL, {});
+  const response = await axios.get<Category[]>(API_BASE_URL);
   return response.data;
 });
 
