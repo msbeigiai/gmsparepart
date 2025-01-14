@@ -38,27 +38,20 @@ public class Address extends BaseEntityCreateUpdate {
   private String postalCode;
 
   @Column(name = "country", nullable = false)
-  private String country;
+  private String country = "Iran";
 
   public Address() {
   }
 
-  public Address(Long addressId, User user, String addressLine1, String city, String postalCode, String country,
-      LocalDateTime createdAt) {
-    this.addressId = addressId;
+  public Address(User user, String addressLine1, String city, String postalCode) {
     this.user = user;
     this.addressLine1 = addressLine1;
     this.city = city;
     this.postalCode = postalCode;
-    this.country = country;
   }
 
   public Long getAddressId() {
     return addressId;
-  }
-
-  public void setAddressId(Long addressId) {
-    this.addressId = addressId;
   }
 
   public User getUser() {
