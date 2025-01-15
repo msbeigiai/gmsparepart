@@ -11,6 +11,7 @@ public class ProductDTO {
   private BigDecimal price;
   private int stockQuantity;
   private Long categoryId;
+  private String categoryName;
   private String image;
 
   public ProductDTO() {
@@ -21,14 +22,15 @@ public class ProductDTO {
                     String description,
                     BigDecimal price,
                     int stockQuantity,
-                    Long countInCategory,
+                    Long categoryId, String categoryName,
                     String image) {
     this.productId = productId;
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
-    this.categoryId = countInCategory;
+    this.categoryId = categoryId;
+    this.categoryName = categoryName;
     this.image = image;
   }
 
@@ -86,5 +88,13 @@ public class ProductDTO {
 
   public void setImage(String image) {
     this.image = image;
+  }
+
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
 }
