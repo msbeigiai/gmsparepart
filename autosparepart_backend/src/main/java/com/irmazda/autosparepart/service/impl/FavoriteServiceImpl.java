@@ -31,7 +31,13 @@ public class FavoriteServiceImpl implements FavoriteService {
     User user = userService.getUserFromPrincipal(principal);
     List<Favorite> favorites = favoriteRepository.findByUser_UserId(user.getUserId());
     return favorites.stream()
-            .map(favorite -> new FavoriteDTO(favorite.getProduct().getProductId().toString())).toList();
+            .map(favorite -> new FavoriteDTO(
+                    favorite.getFavoriteId(),
+                    favorite.getProduct().getProductId().toString(),
+                    favorite.getProduct().getName(),
+                    favorite.getProduct().getPrice(),
+                    favorite.getProduct().getImages().getFirst().getUrl()))
+            .toList();
   }
 
   @Override
