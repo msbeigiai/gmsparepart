@@ -1,18 +1,15 @@
+import { Favorite } from "@/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface Favorite {
-  productId: string;
-}
-
 interface FavoriteState {
-  item: Favorite[];
+  items: Favorite[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: FavoriteState = {
-  item: [],
+  items: [],
   status: 'idle',
   error: null
 }
@@ -46,7 +43,7 @@ export const fetchFavorites = createAsyncThunk(
   async (_, { getState }) => {
     const state: any = getState();
     const token = state.auth.token;
-    
+
     const response = await axios.get<Favorite[]>(API_BASE_URL, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -71,10 +68,10 @@ const favoriteSlice = createSlice({
       })
       .addCase(addToFavorite.fulfilled, (state, action: PayloadAction<Favorite>) => {
         state.status = 'succeeded';
-        const existingItem = state.item.find(item => item.productId === action.payload.productId);
+        const existingItem = state.items.find(item => item.productId === action.payload.productId);
 
         if (!existingItem) {
-          state.item.push(action.payload);
+          state.items.push(action.payload);
         }
       })
       .addCase(addToFavorite.rejected, (state, action) => {
@@ -84,9 +81,9 @@ const favoriteSlice = createSlice({
       .addCase(removeFavorite.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(removeFavorite.fulfilled, (state, action: PayloadAction<Favorite>) => {
+      .addCase(removeFavorite.fulfilled, (state, action: PayloadAction<{ productId: string }>) => {
         state.status = 'succeeded';
-        state.item = state.item.filter(fav => fav.productId !== action.payload.productId)
+        state.items = state.items.filter(fav => fav.productId !== action.payload.productId);
       })
       .addCase(removeFavorite.rejected, (state, action) => {
         state.status = 'failed';
@@ -97,7 +94,7 @@ const favoriteSlice = createSlice({
       })
       .addCase(fetchFavorites.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.item = action.payload;
+        state.items = action.payload;
       })
       .addCase(fetchFavorites.rejected, (state, action) => {
         state.status = 'failed';

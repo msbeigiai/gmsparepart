@@ -2,6 +2,12 @@ import { Address } from "@/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
+interface AddressRequest {
+  addressLine1: string;
+  city: string;
+  postalCode: string
+}
+
 
 interface AddressState {
   items: Address[];
@@ -28,23 +34,31 @@ export const fetchAddresses = createAsyncThunk('addresses/fetchAddresses', async
   return response.data;
 });
 
-interface AddressRequest {
-  addressLine1: string;
-  city: string;
-  postalCode: string
-}
+export const addAddress = createAsyncThunk('addresses/addAddresses',
+  async ({ request }: { request: AddressRequest }, { getState }) => {
+    const state: any = getState();
+    const token = state.auth.token;
+    const response = await axios.post<Address>(API_BASE_URL, request,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    return response.data;
+  });
 
-export const addAddress = createAsyncThunk('addresses/addAddresses', async ({ request }: { request: AddressRequest }, { getState }) => {
-  const state: any = getState();
-  const token = state.auth.token;
-  const response = await axios.post<string>(API_BASE_URL, request,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  return response.data;
-});
+export const deleteAddress = createAsyncThunk('addresses/deleteAddress',
+  async ({ addressId }: { addressId: number }, { getState }) => {
+    const state: any = getState();
+    const token = state.auth.token;
+    await axios.delete(`${API_BASE_URL}/${addressId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    return addressId;
+  });
 
 
 const addressSlice = createSlice({
@@ -67,13 +81,24 @@ const addressSlice = createSlice({
       .addCase(addAddress.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(addAddress.fulfilled, (state, action: PayloadAction<string>) => {
+      .addCase(addAddress.fulfilled, (state, action: PayloadAction<Address>) => {
         state.status = 'succeeded';
-        console.log(action.payload);
+        state.items.push(action.payload);
       })
       .addCase(addAddress.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Error fetching addresses';
+      })
+      .addCase(deleteAddress.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteAddress.fulfilled, (state, action: PayloadAction<number>) => {
+        state.status = 'succeeded';        
+        state.items = state.items.filter(address => address.addressId !== action.payload)
+      })
+      .addCase(deleteAddress.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Error deleting addresses';
       })
   }
 });
