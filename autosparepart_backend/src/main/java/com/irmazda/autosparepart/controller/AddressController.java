@@ -4,7 +4,9 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
+import com.irmazda.autosparepart.dto.address.AddressDTO;
 import com.irmazda.autosparepart.dto.address.AddressRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +24,19 @@ public class AddressController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Address>> getAddress(Principal principal) {
+  public ResponseEntity<List<AddressDTO>> getAddress(Principal principal) {
     return ResponseEntity.ok().body(addressService.getAddress(principal));
   }
 
   @PostMapping
-  public ResponseEntity<String> addAddress(@RequestBody AddressRequest request,
-                                           Principal principal) {
-    addressService.addAddress(request, principal);
-    return ResponseEntity.created(URI.create("")).body("Address added successfully");
+  public ResponseEntity<AddressDTO> addAddress(@RequestBody AddressRequest request,
+                                               Principal principal) {
+    return ResponseEntity.created(URI.create("")).body(addressService.addAddress(request, principal));
+  }
+
+  @DeleteMapping("/{addressId}")
+  public ResponseEntity<?> deleteAddress(@PathVariable Long addressId, Principal principal) {
+    addressService.deleteAddress(addressId, principal);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }
