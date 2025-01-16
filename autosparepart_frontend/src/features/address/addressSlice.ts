@@ -61,6 +61,20 @@ export const deleteAddress = createAsyncThunk('addresses/deleteAddress',
   });
 
 
+export const updateAddress = createAsyncThunk('addresses/updateAddress',
+  async ({ addressId, address }: { addressId: number; address: Address }, { getState }) => {
+    const state: any = getState();
+    const token = state.auth.token;
+    const response = await axios.put<Address>(`${API_BASE_URL}/${addressId}`,
+      { address },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    return response.data;
+  });
+
 const addressSlice = createSlice({
   name: 'addresses',
   initialState,
@@ -93,10 +107,24 @@ const addressSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(deleteAddress.fulfilled, (state, action: PayloadAction<number>) => {
-        state.status = 'succeeded';        
+        state.status = 'succeeded';
         state.items = state.items.filter(address => address.addressId !== action.payload)
       })
       .addCase(deleteAddress.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Error deleting addresses';
+      })
+      .addCase(updateAddress.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateAddress.fulfilled, (state, action: PayloadAction<Address>) => {
+        state.status = 'succeeded';
+        const index = state.items.findIndex((item)=>item.addressId === action.payload.addressId);
+        if (index && index !== -1) {
+          state.items[index] = action.payload;
+        }
+      })
+      .addCase(updateAddress.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Error deleting addresses';
       })
