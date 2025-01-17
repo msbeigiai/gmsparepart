@@ -61,10 +61,9 @@ public class AddressServiceImpl implements AddressService {
             .orElseThrow(() -> new RuntimeException("No address with this id found!"));
 
     if (maybeAddress.getUser() == user) {
-
-    maybeAddress.setAddressLine1(request.getAddressLine1());
-    maybeAddress.setCity(request.getCity());
-    maybeAddress.setPostalCode(request.getPostalCode());
+      maybeAddress.setAddressLine1(request.getAddressLine1());
+      maybeAddress.setCity(request.getCity());
+      maybeAddress.setPostalCode(request.getPostalCode());
     } else {
       throw new AuthenticationException("User need to login");
     }

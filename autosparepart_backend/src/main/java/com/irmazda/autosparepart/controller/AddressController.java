@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import com.irmazda.autosparepart.entity.Address;
 import com.irmazda.autosparepart.service.AddressService;
 
+import javax.naming.AuthenticationException;
+
 @RestController
 @RequestMapping("/api/v1/addresses")
 public class AddressController {
@@ -32,6 +34,13 @@ public class AddressController {
   public ResponseEntity<AddressDTO> addAddress(@RequestBody AddressRequest request,
                                                Principal principal) {
     return ResponseEntity.created(URI.create("")).body(addressService.addAddress(request, principal));
+  }
+
+  @PutMapping("/{addressId}")
+  public ResponseEntity<AddressDTO> updateAddress(@PathVariable Long addressId,
+                                                  @RequestBody AddressRequest request,
+                                                  Principal principal) throws AuthenticationException {
+    return ResponseEntity.ok().body(addressService.updateAddress(addressId, request, principal));
   }
 
   @DeleteMapping("/{addressId}")
