@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto px-4 flex justify-between items-center h-16">
         {/* Left: Logo */}
         <Link to="/" className="text-xl font-bold">
-          SparePartsHub
+          MazPARTS
         </Link>
 
         {/* Center: Navigation Links */}
