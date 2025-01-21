@@ -9,7 +9,7 @@ import com.irmazda.autosparepart.dto.favorite.FavoriteDTO;
 public interface FavoriteService {
   List<FavoriteDTO> getUserFavorites(Principal principal);
 
-  void addFavorite(UUID productId, Principal principal);
+  FavoriteDTO addFavorite(UUID productId, Principal principal);
 
   void removeFavorite(UUID productId, Principal principal);
 }

@@ -1,7 +1,6 @@
 package com.irmazda.autosparepart.controller;
 
 import com.irmazda.autosparepart.dto.favorite.FavoriteDTO;
-import com.irmazda.autosparepart.entity.Favorite;
 import com.irmazda.autosparepart.service.FavoriteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +27,8 @@ public class FavoriteController {
   }
 
   @PostMapping("/add/{productId}")
-  public ResponseEntity<String> addFavorite(@PathVariable UUID productId, Principal principal) {
-    favoriteService.addFavorite(productId, principal);
-    return new ResponseEntity<>(productId.toString(), HttpStatus.CREATED);
+  public ResponseEntity<FavoriteDTO> addFavorite(@PathVariable UUID productId, Principal principal) {
+    return ResponseEntity.created(URI.create("")).body(favoriteService.addFavorite(productId, principal));
   }
 
   @DeleteMapping("/delete/{productId}")

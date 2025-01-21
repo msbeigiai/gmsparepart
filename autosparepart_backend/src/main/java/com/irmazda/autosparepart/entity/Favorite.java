@@ -37,10 +37,9 @@ public class Favorite {
   public Favorite() {
   }
 
-  public Favorite(User user, Product product, LocalDateTime addedDate) {
+  public Favorite(User user, Product product) {
     this.user = user;
     this.product = product;
-    this.addedDate = addedDate;
   }
 
   public Long getFavoriteId() {

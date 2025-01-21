@@ -12,14 +12,14 @@ import com.irmazda.autosparepart.entity.Favorite;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-  List<Favorite> findByUser_UserId(UUID userId);
+  List<Favorite> findByUser_UserId(String userId);
 
   @Query("SELECT CASE WHEN COUNT(f) > 0 THEN true ELSE false END " +
       "FROM Favorite f WHERE f.user.userId = :userId AND f.product.productId = :productId")
-  boolean existsByUserAndProduct(@Param("userId") UUID userId, @Param("productId") UUID productId);
+  boolean existsByUserAndProduct(@Param("userId") String userId, @Param("productId") UUID productId);
 
   @Modifying
   @Query("DELETE FROM Favorite f WHERE f.user.userId = :userId AND f.product.productId = :productId")
-  void deleteByUserAndProduct(@Param("userId") UUID userId, @Param("productId") UUID productId);
+  void deleteByUserAndProduct(@Param("userId") String userId, @Param("productId") UUID productId);
 
 }
