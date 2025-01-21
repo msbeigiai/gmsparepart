@@ -6,27 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 public class UserProfile {
-  private User user;
   private String firstName;
   private String lastName;
   private Map<String, List<String>> attributes;
 
-  public UserProfile(User user,
+  public UserProfile(
                      String firstName,
                      String lastName,
                      Map<String, List<String>> attributes) {
-    this.user = user;
     this.firstName = firstName;
     this.lastName = lastName;
     this.attributes = attributes;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
   }
 
   public String getFirstName() {

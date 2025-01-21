@@ -1,30 +1,22 @@
 package com.irmazda.autosparepart.entity;
 
-import java.util.UUID;
-
 import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.irmazda.autosparepart.entity.enums.UserRole;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User extends BaseEntityCreateUpdate {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "user_id", updatable = false, nullable = false)
-  private UUID userId;
+  @Column(name = "user_id")
+  private String userId;
 
   @Column(name = "email", nullable = false, unique = true)
   private String email;
 
-  @Column(name = "role", nullable = true)
-  private String role;
+  @Enumerated(EnumType.STRING)
+  private UserRole role;
 
   public User() {
   }
@@ -33,20 +25,27 @@ public class User extends BaseEntityCreateUpdate {
     this.email = email;
   }
 
-  public User(UUID userId) {
-    this.userId = userId;
-  }
-
-  public User(String email, String role) {
+  public User(String email, UserRole role) {
     this.email = email;
     this.role = role;
   }
 
-  public UUID getUserId() {
+  public User(String userId, String email, UserRole role) {
+    this.userId = userId;
+    this.email = email;
+    this.role = role;
+  }
+
+  public User(String userId, String email) {
+    this.userId = userId;
+    this.email = email;
+  }
+
+  public String getUserId() {
     return userId;
   }
 
-  public void setUserId(UUID userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 
@@ -58,11 +57,11 @@ public class User extends BaseEntityCreateUpdate {
     this.email = email;
   }
 
-  public String getRole() {
+  public UserRole getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(UserRole role) {
     this.role = role;
   }
 }
