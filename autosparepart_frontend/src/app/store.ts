@@ -5,6 +5,8 @@ import cartReducer from '../features/cart/cartSlice';
 import localCartReducer from '../features/cart/localCartSlice';
 import addressReducer from '../features/address/addressSlice';
 import reviewReducer from "../features/review/reviewSlice";
+import favoriteReducer from "../features/favorite/favoriteSlice";
+import categoryReducer from "../features/category/categorySlice";
 
 export const store = configureStore({
   reducer:{
@@ -14,6 +16,8 @@ export const store = configureStore({
     localCart: localCartReducer,
     addresses: addressReducer,
     reviews: reviewReducer,
+    favorites: favoriteReducer,
+    categories: categoryReducer
   }
 });
 

@@ -14,7 +14,7 @@ const Home = () => {
     dispatch(fetchProducts());
     dispatch(fetchAddresses());
     dispatch(getAllCategories());
-  }, [dispatch]);
+  }, []);
 
 
   return (

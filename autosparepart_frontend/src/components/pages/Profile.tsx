@@ -1,34 +1,51 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { addAddress, deleteAddress, fetchAddresses, updateAddress } from "@/features/address/addressSlice";
+import {
+  addAddress,
+  deleteAddress,
+  fetchAddresses,
+  updateAddress,
+} from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
 import { fetchFavorites } from "@/features/favorite/favoriteSlice";
+import { AddAddressRequest } from "@/types";
 import {
   Bell,
   CreditCard,
   ExternalLink,
   Heart,
-  Minus,
   Package,
   Plus,
   ShoppingBag,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddressForm from "../AddressForm";
-import { Address } from "@/types";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
 
 const EcommerceProfile = () => {
   const dispatch = useAppDispatch();
+  const [showForm, setShowForm] = useState(false);
   const { items: addresses } = useAppSelector((state) => state.addresses);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { items: favorites } = useAppSelector((state) => state.favorites);
-  const [newAddress, setNewAddress] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<Address>();
+  const [editingAddress, setEditingAddress] =
+    useState<AddAddressRequest | null>(null);
+  const formRef = useRef<{ reset: () => void }>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -37,26 +54,47 @@ const EcommerceProfile = () => {
     }
   }, [dispatch, isAuthenticated, addresses.length]);
 
-  const handleEditAddress = (address: Address) => {
-    setEditingAddress(address);
-  };
-
-  const handleNewAddress = () => {
-    setNewAddress(!newAddress);
-  };
-
   const handleDeleteAddress = (addressId: number) => {
     dispatch(deleteAddress({ addressId }));
   };
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values: AddAddressRequest) => {
     if (editingAddress) {
-      dispatch(updateAddress({addressId: editingAddress.addressId, ...values}));
+      console.log("EDIT ADDRESS: ", editingAddress);
+
+      dispatch(
+        updateAddress({
+          addressId: editingAddress.addressId!,
+          address: { ...values },
+        })
+      );
       setEditingAddress(null);
     } else {
-      dispatch(addAddress({request: values}))
+      dispatch(addAddress({ request: values }));
     }
+    formRef.current?.reset();
+    setShowForm(false);
   };
+
+  const handelFormCancel = () => {
+    setEditingAddress(null);
+    formRef.current?.reset();
+    setShowForm(false);
+  };
+
+  if (editingAddress) {
+    console.log("EDIT ADDRESS: ", editingAddress);
+
+    return (
+      <AddressForm
+        initialValues={editingAddress}
+        onSubmit={handleFormSubmit}
+        onCancel={handelFormCancel}
+        isEditing={true}
+        formRef={formRef}
+      />
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -75,7 +113,7 @@ const EcommerceProfile = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-purple-100 to-indigo-100 p-4">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-300 to-indigo-100 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Profile Summary */}
         <Card className="mb-6">
@@ -169,73 +207,83 @@ const EcommerceProfile = () => {
 
           {/* Addresses Tab */}
           <TabsContent value="addresses">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {addresses.map((address) => (
-                <Card key={address.addressId}>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-semibold mb-2">
-                          {address.addressId === 1 ? "Home" : "Office"}
-                          {address.addressId && (
-                            <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                              Default
-                            </span>
-                          )}
-                        </h3>
-                        <p className="text-gray-600">{address.addressLine1}</p>
-                        <p className="text-gray-600">{address.city}</p>
-                        <p className="text-gray-600">{address.country}</p>
-                        <p className="text-gray-600">
-                          Phone: {address.postalCode}
-                        </p>
-                      </div>
-                      <div className="space-x-2">
-                        <Button variant="ghost" size="sm" onClick={()=>handleEditAddress(address)}>
+            {addresses.length === 0 ? (
+              <div className="flex justify-center text-lg text-slate-400">
+                No addresses added
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {" "}
+                <h3 className="text-3xl p-4 mb-2 h-full bg-white rounded-lg text-center font-bold">
+                  Your Addresses
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                  {addresses.map((address) => (
+                    <Card key={address.addressId}>
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-semibold mb-2">
+                              {address.addressId === 1 ? "Home" : "Office"}
+                              {address.addressId && (
+                                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                  Default
+                                </span>
+                              )}
+                            </h3>
+                            <p className="text-gray-600">
+                              Address Line: {address.addressLine1}
+                            </p>
+                            <p className="text-gray-600">
+                              City: {address.city}
+                            </p>
+                            <p className="text-gray-600">
+                              Country: {address.country}
+                            </p>
+                            <p className="text-gray-600">
+                              Postal Code: {address.postalCode}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter className="flex justify-end space-x-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditingAddress(address);
+                            setShowForm(true);
+                          }}
+                        >
                           Edit
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="sm"
+                          variant="outline"
                           onClick={() => handleDeleteAddress(address.addressId)}
                         >
                           Delete
                         </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              <Button
-                className="h-full min-h-[200px]"
-                variant="outline"
-                onClick={handleNewAddress}
-              >
-                {newAddress === false ? (
-                  <div className="flex">
-                    <Plus className="h-6 w-6 mr-2" />
-                    Add New Address
-                  </div>
-                ) : (
-                  <div className="flex">
-                    <Minus className="h-6 w-6 mr-2" />
-                    Remove Form
-                  </div>
-                )}
-                {/* <Plus className="h-6 w-6 mr-2" />
-                {newAddress === false ? `Add New Address` : `Remove form`} */}
-              </Button>
-              {newAddress && (
-                <Card className="h-full min-h-[200px]">
-                  <CardHeader>
-                    <CardTitle>Add new address</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <AddressForm initialValues={editingAddress || undefined} onSubmit={handleFormSubmit} />
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                  <Collapsible open={showForm} onOpenChange={setShowForm}>
+                    <CollapsibleTrigger asChild>
+                      <Button className="w-full">
+                        {showForm ? "Hide Form" : "Add New Address"}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4">
+                      <AddressForm
+                        initialValues={editingAddress || undefined}
+                        onSubmit={handleFormSubmit}
+                        onCancel={handelFormCancel}
+                        isEditing={!!editingAddress}
+                        formRef={formRef}
+                      />
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* Payment Methods Tab */}
@@ -282,27 +330,36 @@ const EcommerceProfile = () => {
           <TabsContent value="wishlist">
             <Card>
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {favorites.map((favorite) => (
-                    <Card key={favorite.productId}>
-                      <CardContent className="p-4">
-                        <img src={favorite.productImageUrl} className="mb-2" />
-                        <h3 className="font-semibold">
-                          Product Name: {favorite.productName}
-                        </h3>
-                        <p className="text-gray-600 mb-4">
-                          ${(99.99 * favorite.productPrice).toFixed(2)}
-                        </p>
-                        <div className="flex space-x-2">
-                          <Button className="flex-1">Add to Cart</Button>
-                          <Button variant="outline" size="icon">
-                            <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                {favorites.length !== 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {favorites.map((favorite) => (
+                      <Card key={favorite.productId}>
+                        <CardContent className="p-4">
+                          <img
+                            src={favorite.productImageUrl}
+                            className="mb-2"
+                          />
+                          <h3 className="font-semibold">
+                            Product Name: {favorite.productName}
+                          </h3>
+                          <p className="text-gray-600 mb-4">
+                            ${(99.99 * favorite.productPrice).toFixed(2)}
+                          </p>
+                          <div className="flex space-x-2">
+                            <Button className="flex-1">Add to Cart</Button>
+                            <Button variant="outline" size="icon">
+                              <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex justify-center text-lg text-slate-400">
+                    No products added to wishlist
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -364,4 +421,3 @@ const EcommerceProfile = () => {
 };
 
 export default EcommerceProfile;
-

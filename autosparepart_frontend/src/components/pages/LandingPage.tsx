@@ -2,7 +2,7 @@ import { useAppSelector } from "@/app/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import heroImage from "@/assets/heo-image.jpg"
+import heroImage from "@/assets/heo-image.jpg";
 import {
   Carousel,
   CarouselContent,
@@ -16,21 +16,37 @@ import {
   Settings,
   Shield,
   Star,
-  Truck
-} from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+  Truck,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Products from "../Products";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const {items: featuredProducts} = useAppSelector((state) => state.products);
+  const { items: featuredProducts } = useAppSelector((state) => state.products);
 
   const topCategories = [
-    { icon: <Truck className="h-8 w-8" />, name: "Tools", count: "2,500+ items" },
-    { icon: <Battery className="h-8 w-8" />, name: "Batteries", count: "500+ items" },
-    { icon: <Droplet className="h-8 w-8" />, name: "Oil & Fluids", count: "1,000+ items" },
-    { icon: <Settings className="h-8 w-8" />, name: "Engine Parts", count: "3,000+ items" },
+    {
+      icon: <Truck className="h-8 w-8" />,
+      name: "Tools",
+      count: "2,500+ items",
+    },
+    {
+      icon: <Battery className="h-8 w-8" />,
+      name: "Batteries",
+      count: "500+ items",
+    },
+    {
+      icon: <Droplet className="h-8 w-8" />,
+      name: "Oil & Fluids",
+      count: "1,000+ items",
+    },
+    {
+      icon: <Settings className="h-8 w-8" />,
+      name: "Engine Parts",
+      count: "3,000+ items",
+    },
   ];
 
   return (
@@ -38,8 +54,8 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="relative bg-black text-white">
         <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent">
-          <img 
-            src={heroImage} 
+          <img
+            src={heroImage}
             alt="Auto parts hero"
             className="w-full h-full object-cover opacity-50"
           />
@@ -51,16 +67,21 @@ const LandingPage = () => {
               Your One-Stop Shop for Quality Auto Parts
             </h1>
             <p className="text-xl mb-8 text-gray-300">
-              Find the perfect parts for your vehicle with our extensive collection 
-              of premium automotive components.
+              Find the perfect parts for your vehicle with our extensive
+              collection of premium automotive components.
             </p>
             <div className="flex gap-4">
-              <Button size="lg" onClick={() => navigate('/products')}>
+              <Button size="lg" onClick={() => navigate("/products")}>
                 Shop Now
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button asChild size="lg" variant="outline" className="text-gray-700">
-                <Link to="/products">Find Parts by Vehicle</Link> 
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="text-gray-700"
+              >
+                <Link to="/products">Find Parts by Vehicle</Link>
               </Button>
             </div>
           </div>
@@ -102,7 +123,10 @@ const LandingPage = () => {
           <h2 className="text-3xl font-bold mb-8">Shop by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {topCategories.map((category, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <Card
+                key={index}
+                className="hover:shadow-lg transition-shadow cursor-pointer"
+              >
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center">
                     <div className="mb-4 p-3 bg-primary/10 rounded-full">
@@ -125,7 +149,10 @@ const LandingPage = () => {
           <Carousel className="w-full">
             <CarouselContent>
               {featuredProducts.map((product) => (
-                <CarouselItem key={product.productId} className="md:basis-1/2 lg:basis-1/3">
+                <CarouselItem
+                  key={product.productId}
+                  className="md:basis-1/2 lg:basis-1/3"
+                >
                   <Card className="m-1">
                     <CardContent className="p-0">
                       <img
@@ -160,12 +187,13 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg mb-8 text-primary-foreground/90">
-            Join thousands of satisfied customers who trust us for their auto parts needs.
+            Join thousands of satisfied customers who trust us for their auto
+            parts needs.
           </p>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             variant="secondary"
-            onClick={() => navigate('/products')}
+            onClick={() => navigate("/products")}
           >
             Browse All Products
             <ChevronRight className="ml-2 h-4 w-4" />
