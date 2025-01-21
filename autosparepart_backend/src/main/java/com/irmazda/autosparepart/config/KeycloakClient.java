@@ -16,7 +16,7 @@ public class KeycloakClient {
 
 
   public KeycloakClient(Keycloak keycloak,
-                        @Value("{keycloak.realm}") String realm) {
+                        @Value("${keycloak.realm}") String realm) {
     this.keycloak = keycloak;
     this.realm = realm;
   }
