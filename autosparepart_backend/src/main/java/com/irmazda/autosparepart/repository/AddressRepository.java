@@ -10,6 +10,6 @@ import com.irmazda.autosparepart.entity.Address;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
   @Query("SELECT a FROM Address a WHERE a.user.userId = ?1")
-  List<Address> findByUserId(UUID userId);
+  List<Address> findByUserId(String userId);
 
 }
