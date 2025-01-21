@@ -9,7 +9,7 @@
             <column name="favorite_id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="user_id" type="UUID">
+            <column name="user_id" type="VARCHAR(36)">
                 <constraints nullable="false" foreignKeyName="fk_favorites_user"
                     references="users(user_id)" />
             </column>

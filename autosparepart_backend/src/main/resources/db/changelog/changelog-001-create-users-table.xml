@@ -5,7 +5,7 @@
 
   <changeSet id="001-create-users-table" author="Mohsen">
     <createTable tableName="users">
-      <column name="user_id" type="UUID">
+      <column name="user_id" type="VARCHAR(36)">
         <constraints primaryKey="true" nullable="false" />
       </column>
       <column name="email" type="VARCHAR(100)">

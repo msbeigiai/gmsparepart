@@ -10,7 +10,7 @@
       <column name="address_id" type="SERIAL">
         <constraints primaryKey="true" nullable="false" />
       </column>
-      <column name="user_id" type="UUID">
+      <column name="user_id" type="VARCHAR(36)">
         <constraints nullable="false" />
       </column>
       <column name="address_line1" type="TEXT">
