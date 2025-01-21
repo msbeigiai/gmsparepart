@@ -29,3 +29,10 @@ spring:
   
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
+
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: irmazda
+  admin-cli:
+    client-id: admin-cli
+    client-secret: AXFGM1Q1ABIVb4tcqkJBZmFX8EdriFJt
