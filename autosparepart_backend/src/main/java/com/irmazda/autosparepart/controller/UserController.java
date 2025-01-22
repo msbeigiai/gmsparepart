@@ -1,7 +1,5 @@
 package com.irmazda.autosparepart.controller;
 
-import com.irmazda.autosparepart.dto.user.UserProfile;
-import com.irmazda.autosparepart.entity.User;
 import com.irmazda.autosparepart.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
