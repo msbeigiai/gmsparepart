@@ -1,3 +1,5 @@
+export const API_BASE_URL = "http://localhost:8081/api/v1";
+
 export interface Product {
   productId: string;
   name: string;
@@ -71,4 +73,12 @@ export interface Favorite {
   productName: string;
   productPrice: string;
   productImageUrl: string;
+}
+
+export interface UserProfile {
+  userId: number;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  createdDate?: string;
 }

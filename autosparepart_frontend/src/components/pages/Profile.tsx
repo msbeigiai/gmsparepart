@@ -36,6 +36,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import { fetchUserProfile } from "@/features/user/userSlice";
 
 const EcommerceProfile = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +44,7 @@ const EcommerceProfile = () => {
   const { items: addresses } = useAppSelector((state) => state.addresses);
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { items: favorites } = useAppSelector((state) => state.favorites);
+  const { item: userProfile } = useAppSelector((state) => state.users);
   const [editingAddress, setEditingAddress] =
     useState<AddAddressRequest | null>(null);
   const formRef = useRef<{ reset: () => void }>(null);
@@ -51,8 +53,11 @@ const EcommerceProfile = () => {
     if (isAuthenticated) {
       dispatch(fetchAddresses());
       dispatch(fetchFavorites());
+      dispatch(fetchUserProfile());
     }
   }, [dispatch, isAuthenticated, addresses.length]);
+
+  console.log("USER PROFILE: ", userProfile);
 
   const handleDeleteAddress = (addressId: number) => {
     dispatch(deleteAddress({ addressId }));
@@ -124,12 +129,16 @@ const EcommerceProfile = () => {
                   src="/api/placeholder/150/150"
                   alt="Profile picture"
                 />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback className="h-24 w-24 bg-gray-100 flex items-center justify-center text-gray-500 text-2xl font-semibold">
+                  {userProfile.firstName?.slice(0, 2).toUpperCase() || "U"}
+                </AvatarFallback>
               </Avatar>
 
               <div className="flex-1 text-center md:text-left space-y-2">
-                <h1 className="text-2xl font-bold">{user!["email"]}</h1>
-                <p className="text-gray-600">Member since January 2024</p>
+                <h1 className="text-2xl font-bold">{userProfile.email}</h1>
+                <p className="text-gray-600">
+                  Member since {userProfile.createdDate?.split("T")[0]}
+                </p>
                 <div className="flex flex-wrap justify-center md:justify-start gap-4">
                   <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
                     Premium Member
@@ -208,15 +217,12 @@ const EcommerceProfile = () => {
           {/* Addresses Tab */}
           <TabsContent value="addresses">
             {addresses.length === 0 ? (
-              <div className="flex justify-center text-lg text-slate-400">
+              <div className="flex justify-center text-lg text-slate-400 p-4">
                 No addresses added
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                 {" "}
-                <h3 className="text-3xl p-4 mb-2 h-full bg-white rounded-lg text-center font-bold">
-                  Your Addresses
-                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                   {addresses.map((address) => (
                     <Card key={address.addressId}>
@@ -265,25 +271,27 @@ const EcommerceProfile = () => {
                       </CardFooter>
                     </Card>
                   ))}
-                  <Collapsible open={showForm} onOpenChange={setShowForm}>
-                    <CollapsibleTrigger asChild>
-                      <Button className="w-full">
-                        {showForm ? "Hide Form" : "Add New Address"}
-                      </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-4">
-                      <AddressForm
-                        initialValues={editingAddress || undefined}
-                        onSubmit={handleFormSubmit}
-                        onCancel={handelFormCancel}
-                        isEditing={!!editingAddress}
-                        formRef={formRef}
-                      />
-                    </CollapsibleContent>
-                  </Collapsible>
                 </div>
               </div>
             )}
+            <div className="pt-2 pb-2">
+              <Collapsible open={showForm} onOpenChange={setShowForm}>
+                <CollapsibleTrigger asChild>
+                  <Button className="w-full">
+                    {showForm ? "Hide Form" : "Add New Address"}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-4">
+                  <AddressForm
+                    initialValues={editingAddress || undefined}
+                    onSubmit={handleFormSubmit}
+                    onCancel={handelFormCancel}
+                    isEditing={!!editingAddress}
+                    formRef={formRef}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
           </TabsContent>
 
           {/* Payment Methods Tab */}
@@ -370,14 +378,14 @@ const EcommerceProfile = () => {
               <CardContent className="p-6 space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" defaultValue="Sarah Johnson" />
+                  <Input id="name" defaultValue={userProfile.firstName} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    defaultValue="sarah.johnson@example.com"
+                    defaultValue={userProfile.email}
                   />
                 </div>
                 <div className="space-y-2">
