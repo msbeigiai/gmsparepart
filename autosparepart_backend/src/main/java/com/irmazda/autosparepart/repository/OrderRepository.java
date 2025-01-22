@@ -18,5 +18,5 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
           "WHERE o.user.userId = :userId " +
           "AND o.orderDate > :orderDate " +
           "AND o.status = :status")
-  boolean existsByUserIdAndProductIdAndOrderDateAfterAndStatus(UUID userId, UUID productId, LocalDateTime sixMonthsAgo, OrderStatus orderStatus);
+  boolean existsByUserIdAndProductIdAndOrderDateAfterAndStatus(String userId, UUID productId, LocalDateTime sixMonthsAgo, OrderStatus orderStatus);
 }
