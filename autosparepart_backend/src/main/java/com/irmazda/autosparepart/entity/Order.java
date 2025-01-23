@@ -98,4 +98,7 @@ public class Order extends BaseEntityCreateUpdate {
             orderItem -> orderItem.getProduct().getProductId().equals(productId)).toList().isEmpty();
   }
 
+  public List<OrderItem> getOrderItems() {
+    return orderItems;
+  }
 }

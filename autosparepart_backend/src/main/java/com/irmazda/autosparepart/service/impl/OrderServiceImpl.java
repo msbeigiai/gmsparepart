@@ -1,5 +1,6 @@
 package com.irmazda.autosparepart.service.impl;
 
+import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
 import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.entity.OrderItem;
 import com.irmazda.autosparepart.entity.Product;
@@ -9,9 +10,11 @@ import com.irmazda.autosparepart.entity.enums.ReviewStatus;
 import com.irmazda.autosparepart.repository.OrderRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.OrderService;
+import com.irmazda.autosparepart.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,28 +23,38 @@ public class OrderServiceImpl implements OrderService {
 
   private final OrderRepository orderRepository;
   private final ProductRepository productRepository;
+  private final UserService userService;
 
-  public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository) {
+  public OrderServiceImpl(OrderRepository orderRepository,
+                          ProductRepository productRepository,
+                          UserService userService) {
     this.orderRepository = orderRepository;
     this.productRepository = productRepository;
+    this.userService = userService;
   }
 
   @Override
-  public Order createOrder(User user, List<OrderItem> items) {
+  public Order createOrder(CartTransferRequest request, Principal principal) {
+    User user = userService.getUserFromPrincipal(principal);
     Order order = new Order();
     order.setUser(user);
     order.setOrderDate(LocalDateTime.now());
     order.setStatus(OrderStatus.PENDING);
 
-    for (OrderItem item : items) {
-      Product product = productRepository.findById(item.getProduct().getProductId())
+    for (CartTransferRequest.CartItemDTO cartItem : request.getCartItems()) {
+      Product product = productRepository.findById(cartItem.getProductId())
               .orElseThrow(() -> new RuntimeException("Product not found"));
 
-      item.setOrder(order);
-      item.setSubtotal(product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+      OrderItem orderItem = new OrderItem();
+      orderItem.setProduct(product);
+      orderItem.setQuantity(cartItem.getQuantity());
+      orderItem.setOrder(order);
+
+      orderItem.setSubtotal(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+      order.getOrderItems().add(orderItem);
     }
 
-    order.setOrderItems(items);
     return orderRepository.save(order);
   }
 

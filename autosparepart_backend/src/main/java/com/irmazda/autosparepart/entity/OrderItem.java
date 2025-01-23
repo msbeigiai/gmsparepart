@@ -1,17 +1,9 @@
 package com.irmazda.autosparepart.entity;
 
-import java.math.BigDecimal;
-
 import com.irmazda.autosparepart.entity.base.BaseEntityCreateUpdate;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
@@ -39,8 +31,15 @@ public class OrderItem extends BaseEntityCreateUpdate {
   @Column(name = "subtotal")
   private BigDecimal subtotal;
 
-  public OrderItem(Long orderItemId, Order order, Product product, int quantity, BigDecimal pricePerUnit,
-      BigDecimal subtotal) {
+  public OrderItem() {
+  }
+
+  public OrderItem(Long orderItemId,
+                   Order order,
+                   Product product,
+                   int quantity,
+                   BigDecimal pricePerUnit,
+                   BigDecimal subtotal) {
     this.orderItemId = orderItemId;
     this.order = order;
     this.product = product;

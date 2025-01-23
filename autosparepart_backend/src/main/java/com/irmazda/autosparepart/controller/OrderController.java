@@ -1,12 +1,15 @@
 package com.irmazda.autosparepart.controller;
 
+import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
 import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.entity.OrderItem;
 import com.irmazda.autosparepart.entity.User;
 import com.irmazda.autosparepart.service.OrderService;
 import com.irmazda.autosparepart.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 
@@ -22,10 +25,11 @@ public class OrderController {
     this.userService = userService;
   }
 
-  @PostMapping("/create")
-  public Order createOrder(@RequestBody List<OrderItem> items, Principal principal) {
-    User user = userService.getUserFromPrincipal(principal);
-    return orderService.createOrder(user, items);
+  @PostMapping("/transfer-cart")
+  public ResponseEntity<Order> createOrder(@RequestBody List<CartTransferRequest.CartItemDTO> request,
+                                           Principal principal) {
+    return ResponseEntity
+            .created(URI.create("")).body(orderService.createOrder(null, principal));
   }
 
   @GetMapping("/user")
