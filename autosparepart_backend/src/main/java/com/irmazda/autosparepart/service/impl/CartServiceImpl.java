@@ -1,9 +1,11 @@
 package com.irmazda.autosparepart.service.impl;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.irmazda.autosparepart.service.UserService;
 import org.springframework.stereotype.Service;
 
 import com.irmazda.autosparepart.entity.Cart;
@@ -21,18 +23,23 @@ public class CartServiceImpl implements CartService {
   private final CartRepository cartRepository;
   private final CartItemRepository cartItemRepository;
   private final ProductRepository productRepository;
+  private final UserService userService;
 
   public CartServiceImpl(CartRepository cartRepository,
                          CartItemRepository cartItemRepository,
-                         ProductRepository productRepository) {
+                         ProductRepository productRepository,
+                         UserService userService) {
     this.cartRepository = cartRepository;
     this.cartItemRepository = cartItemRepository;
     this.productRepository = productRepository;
+    this.userService = userService;
   }
 
   @Override
-  public Cart addToCart(User user, UUID productId, int quantity) {
-    Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+  public Cart addToCart(UUID productId, int quantity, Principal principal) {
+    User user = userService.getUserFromPrincipal(principal);
+    Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
 
     Cart cart = cartRepository.findByUser(user).orElseGet(() -> {
       Cart newCart = new Cart();

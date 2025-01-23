@@ -30,9 +30,11 @@ public class CartController {
   }
 
   @PostMapping("/add")
-  public ResponseEntity<Cart> addToCart(@RequestParam String productId, @RequestParam int quantity, Principal principal) {
-    User user = userService.getUserFromPrincipal(principal); 
-    return ResponseEntity.created(URI.create("")).body(cartService.addToCart(user, UUID.fromString(productId), quantity));
+  public ResponseEntity<Cart> addToCart(@RequestParam String productId,
+                                        @RequestParam int quantity,
+                                        Principal principal) {
+    return ResponseEntity.created(URI.create(""))
+            .body(cartService.addToCart(UUID.fromString(productId), quantity, principal));
   }
 
   @GetMapping("/items")
