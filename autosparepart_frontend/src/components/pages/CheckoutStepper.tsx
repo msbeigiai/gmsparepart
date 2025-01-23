@@ -1,73 +1,99 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AppDispatch } from "@/app/store";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { fetchAddresses } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
-import { removeFromLocalCart, updateLocalQuantity } from '@/features/cart/localCartSlice';
-import { Check, CreditCard, MapPin, Minus, Plus, ShoppingCart, Trash2, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { addToCart } from "@/features/cart/cartSlice";
+import {
+  removeFromLocalCart,
+  updateLocalQuantity,
+} from "@/features/cart/localCartSlice";
+import {
+  Check,
+  CreditCard,
+  MapPin,
+  Minus,
+  Plus,
+  ShoppingCart,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 const CheckoutStepper = () => {
   // const [currentStep, setCurrentStep] = useState(0);
   const dispatch: AppDispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const {items: addresses, status, error} = useAppSelector((state) => state.addresses);
-  const [loginUrl, setLoginUrl] = useState<string | null>(null);
+  const { items: addresses } = useAppSelector((state) => state.addresses);
   const { items } = useAppSelector((state) => state.localCart);
   const [nextButtonActive, setNextButtonActive] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState<string>("");
 
-  const handleAddressChange = (addressId: string) => {
-    setSelectedAddress(addressId);
-    if (onAddressSelect) {
-      onAddressSelect(addressId);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentStep(0);
-    // dispatch(fetchAddresses());
-  }, []);
-
-
   const [currentStep, setCurrentStep] = useState(() => {
     // Check if we're returning from Keycloak login
-    const isReturningFromAuth = localStorage.getItem('checkoutRedirect') === 'true';
+    const isReturningFromAuth =
+      localStorage.getItem("checkoutRedirect") === "true";
     // If we are, and user is authenticated, start at shipping step
     if (isReturningFromAuth) {
-      localStorage.removeItem('checkoutRedirect'); // Clean up
+      localStorage.removeItem("checkoutRedirect"); // Clean up
       return 2; // Skip to shipping step
     }
     return 0; // Otherwise start at beginning
   });
 
+  const handleAddressChange = (addressId: string) => {
+    setSelectedAddress(addressId);
+  };
+
+  useEffect(() => {
+    setCurrentStep(0);
+  }, [dispatch, addresses.length]);
+
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      // For authenticated users, skip the account step
       if (isAuthenticated && currentStep === 0 && items.length > 0) {
+        dispatch(fetchAddresses());
         setCurrentStep(1);
         setNextButtonActive(true);
       } else {
         setNextButtonActive(false);
-        setCurrentStep(current => current + 1);
+        setCurrentStep((current) => current + 1);
+        if (currentStep === steps.length - 2) {
+          const cartItems = items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          }));
+          handleLocalCartItemTransfer(cartItems);
+        }
       }
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
-      // If user is authenticated and on shipping step,
-      // go back to cart review
       if (isAuthenticated && currentStep === 2) {
         setCurrentStep(0);
       } else {
-        setCurrentStep(current => current - 1);
+        setCurrentStep((current) => current - 1);
       }
     }
   };
@@ -76,16 +102,27 @@ const CheckoutStepper = () => {
     keycloak.login();
   };
 
-  const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+  console.log("Local items: ", items);
+  const handleLocalCartItemTransfer = (
+    cartItems: { productId: string; quantity: number }[]
+  ) => {
+    dispatch(addToCart(cartItems));
+  };
+
+  const total = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
 
   const steps = [
-    { title: 'Review Cart', icon: <ShoppingCart className="h-6 w-6" /> },
-    ...(isAuthenticated ? [] : [{ title: 'Account', icon: <User className="h-6 w-6" /> }]),
-    { title: 'Shipping', icon: <MapPin className="h-6 w-6" /> },
-    { title: 'Payment', icon: <CreditCard className="h-6 w-6" /> },
-    { title: 'Confirmation', icon: <Check className="h-6 w-6" /> }
+    { title: "Review Cart", icon: <ShoppingCart className="h-6 w-6" /> },
+    ...(isAuthenticated
+      ? []
+      : [{ title: "Account", icon: <User className="h-6 w-6" /> }]),
+    { title: "Shipping", icon: <MapPin className="h-6 w-6" /> },
+    { title: "Payment", icon: <CreditCard className="h-6 w-6" /> },
+    { title: "Confirmation", icon: <Check className="h-6 w-6" /> },
   ];
-
 
   // Calculate total
 
@@ -99,7 +136,6 @@ const CheckoutStepper = () => {
     dispatch(removeFromLocalCart(productId));
   };
 
-
   const CartReview = () => (
     <div className="space-y-4">
       {items.length === 0 ? (
@@ -110,7 +146,10 @@ const CheckoutStepper = () => {
       ) : (
         <>
           {items.map((item) => (
-            <div key={item.productId} className="flex items-center p-4 border rounded hover:bg-gray-50">
+            <div
+              key={item.productId}
+              className="flex items-center p-4 border rounded hover:bg-gray-50"
+            >
               {/* Optional image */}
               {item.product.image && (
                 <div className="w-16 h-16 mr-4">
@@ -125,7 +164,9 @@ const CheckoutStepper = () => {
               {/* Item details */}
               <div className="flex-grow">
                 <h3 className="font-medium">{item.product.name}</h3>
-                <p className="text-sm text-gray-500">${item.product.price.toFixed(2)}</p>
+                <p className="text-sm text-gray-500">
+                  ${item.product.price.toFixed(2)}
+                </p>
               </div>
 
               {/* Quantity controls */}
@@ -133,7 +174,9 @@ const CheckoutStepper = () => {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                  onClick={() =>
+                    updateQuantity(item.productId, item.quantity - 1)
+                  }
                   className="h-8 w-8"
                 >
                   <Minus className="h-4 w-4" />
@@ -142,7 +185,9 @@ const CheckoutStepper = () => {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                  onClick={() =>
+                    updateQuantity(item.productId, item.quantity + 1)
+                  }
                   className="h-8 w-8"
                 >
                   <Plus className="h-4 w-4" />
@@ -178,7 +223,6 @@ const CheckoutStepper = () => {
     </div>
   );
 
-  // ... rest of the component remains the same (ShippingForm, AccountForm, PaymentForm, Confirmation)
   const ShippingForm = () => (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -210,8 +254,8 @@ const CheckoutStepper = () => {
                   <TableRow key={address.addressId}>
                     <TableCell className="w-12">
                       <RadioGroupItem
-                        value={address.addressId}
-                        id={address.addressId}
+                        value={address.addressId.toString()}
+                        id={address.addressId.toString()}
                         className="mt-1"
                       />
                     </TableCell>
@@ -236,11 +280,10 @@ const CheckoutStepper = () => {
   const AccountForm = () => (
     <div className="text-center space-y-4">
       <h3 className="text-xl font-medium">Account Required</h3>
-      <p className="text-gray-500">Please log in or create an account to continue checkout.</p>
-      <Button
-        className="w-full"
-        onClick={handleAccountStep}
-      >
+      <p className="text-gray-500">
+        Please log in or create an account to continue checkout.
+      </p>
+      <Button className="w-full" onClick={handleAccountStep}>
         Continue to Login
       </Button>
     </div>
@@ -281,7 +324,7 @@ const CheckoutStepper = () => {
       0: <CartReview />,
       1: <ShippingForm />,
       2: <PaymentForm />,
-      3: <Confirmation />
+      3: <Confirmation />,
     };
 
     const unauthenticatedStepMap = {
@@ -289,10 +332,12 @@ const CheckoutStepper = () => {
       1: <AccountForm />,
       2: <ShippingForm />,
       3: <PaymentForm />,
-      4: <Confirmation />
+      4: <Confirmation />,
     };
 
-    const stepMap = isAuthenticated ? authenticatedStepMap : unauthenticatedStepMap;
+    const stepMap = isAuthenticated
+      ? authenticatedStepMap
+      : unauthenticatedStepMap;
     return stepMap[currentStep as keyof typeof stepMap] || null;
   };
 
@@ -301,17 +346,26 @@ const CheckoutStepper = () => {
       <CardHeader>
         <CardTitle>Checkout</CardTitle>
         <CardDescription>Complete your purchase</CardDescription>
-        {isAuthenticated && <CardDescription>Logged in as {user?.email}</CardDescription>}
+        {isAuthenticated && (
+          <CardDescription>Logged in as {user?.email}</CardDescription>
+        )}
       </CardHeader>
       <CardContent>
         <div className="flex justify-between mb-8">
           {steps.map((step, index) => (
             <div key={index} className="flex flex-col items-center">
-              <div className={`
+              <div
+                className={`
                 rounded-full p-2 mb-2
-                ${index === currentStep ? 'bg-blue-500 text-white' :
-                  index < currentStep ? 'bg-green-500 text-white' : 'bg-gray-200'}
-              `}>
+                ${
+                  index === currentStep
+                    ? "bg-blue-500 text-white"
+                    : index < currentStep
+                    ? "bg-green-500 text-white"
+                    : "bg-gray-200"
+                }
+              `}
+              >
                 {step.icon}
               </div>
               <span className="text-sm text-center">{step.title}</span>
@@ -331,15 +385,19 @@ const CheckoutStepper = () => {
         {nextButtonActive ? (
           <Button
             onClick={handleNext}
-            disabled={currentStep === steps.length - 1 || (currentStep === 0 && items.length === 0)}
+            disabled={
+              currentStep === steps.length - 1 ||
+              (currentStep === 0 && items.length === 0) ||
+              (currentStep === 1 && selectedAddress === "")
+            }
           >
-            {currentStep === steps.length - 2 ? 'Place Order' : 'Next'}
-          </Button>) : (<Button
-            onClick={handleNext}
-            disabled={currentStep === 1}
-          >
-            {currentStep === steps.length - 2 ? 'Place Order' : 'Next'}
-          </Button>)}
+            {currentStep === steps.length - 2 ? "Place Order" : "Next"}
+          </Button>
+        ) : (
+          <Button onClick={handleNext} disabled={currentStep === 1}>
+            {currentStep === steps.length - 2 ? "Place Order" : "Next"}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
