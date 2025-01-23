@@ -11,20 +11,24 @@ export interface Product {
   stockQuantity: number;
 }
 
-export interface CartItem {
+export interface LocalCartItem {
   productId: string;
   quantity: number;
   product: {
     productId: string;
     name: string;
     price: number;
-    description: string;
     image: string;
   };
 }
 
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
 export interface Cart {
-  items: CartItem[];
+  items: LocalCartItem[];
 }
 
 export interface Review {
