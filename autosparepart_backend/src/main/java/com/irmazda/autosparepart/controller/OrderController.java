@@ -26,10 +26,10 @@ public class OrderController {
   }
 
   @PostMapping("/transfer-cart")
-  public ResponseEntity<Order> createOrder(@RequestBody List<CartTransferRequest.CartItemDTO> request,
+  public ResponseEntity<Order> createOrder(@RequestBody CartTransferRequest request,
                                            Principal principal) {
     return ResponseEntity
-            .created(URI.create("")).body(orderService.createOrder(null, principal));
+            .created(URI.create("")).body(orderService.createOrder(request, principal));
   }
 
   @GetMapping("/user")

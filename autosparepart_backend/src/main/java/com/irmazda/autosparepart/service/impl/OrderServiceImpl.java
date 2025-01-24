@@ -41,6 +41,8 @@ public class OrderServiceImpl implements OrderService {
     order.setOrderDate(LocalDateTime.now());
     order.setStatus(OrderStatus.PENDING);
 
+    BigDecimal totalAmount = BigDecimal.ZERO;
+
     for (CartTransferRequest.CartItemDTO cartItem : request.getCartItems()) {
       Product product = productRepository.findById(cartItem.getProductId())
               .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -49,12 +51,16 @@ public class OrderServiceImpl implements OrderService {
       orderItem.setProduct(product);
       orderItem.setQuantity(cartItem.getQuantity());
       orderItem.setOrder(order);
+      orderItem.setPricePerUnit(product.getPrice());
 
       orderItem.setSubtotal(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+      totalAmount = totalAmount.add(orderItem.getSubtotal());
 
       order.getOrderItems().add(orderItem);
     }
 
+    order.setTotalAmount(totalAmount);
     return orderRepository.save(order);
   }
 
