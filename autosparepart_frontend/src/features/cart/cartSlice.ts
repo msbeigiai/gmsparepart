@@ -31,24 +31,32 @@ export const fetchCartItems = createAsyncThunk(
   }
 );
 
-export const addToCart = createAsyncThunk(
+export const transferCart = createAsyncThunk(
   "cart/addItem",
-  async (cartItems: CartItem[], { getState }) => {
+  async (cartItems: CartItem[], { getState, dispatch, rejectWithValue }) => {
     const state: any = getState();
     const token = state.auth.token;
 
-    console.log("sending to server cartItem", cartItems);
-
-    const response = await axios.post(
-      `${API_BASE_URL}/orders/transfer-cart`,
-      cartItems,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/orders/transfer-cart`,
+        { cartItems },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(clearCart());
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(
+          error.response?.data?.message || "Failed to add to cart"
+        );
       }
-    );
-    return response.data;
+      return rejectWithValue("Failed to add to cart");
+    }
   }
 );
 
@@ -88,15 +96,15 @@ const cartSlice = createSlice({
     });
 
     // Add to cart
-    builder.addCase(addToCart.pending, (state) => {
+    builder.addCase(transferCart.pending, (state) => {
       state.status = "loading";
       state.error = null;
     });
-    builder.addCase(addToCart.fulfilled, (state, action) => {
+    builder.addCase(transferCart.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.items = action.payload.items;
     });
-    builder.addCase(addToCart.rejected, (state, action) => {
+    builder.addCase(transferCart.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.payload as string;
     });

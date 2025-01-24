@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { fetchAddresses } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
-import { addToCart } from "@/features/cart/cartSlice";
+import { transferCart } from "@/features/cart/cartSlice";
 import {
   removeFromLocalCart,
   updateLocalQuantity,
@@ -106,7 +106,7 @@ const CheckoutStepper = () => {
   const handleLocalCartItemTransfer = (
     cartItems: { productId: string; quantity: number }[]
   ) => {
-    dispatch(addToCart(cartItems));
+    dispatch(transferCart(cartItems));
   };
 
   const total = items.reduce(
