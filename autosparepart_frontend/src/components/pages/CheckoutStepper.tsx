@@ -15,12 +15,14 @@ import { fetchAddresses } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
 import { transferCart } from "@/features/cart/cartSlice";
 import {
+  clearLocalCart,
   removeFromLocalCart,
   updateLocalQuantity,
 } from "@/features/cart/localCartSlice";
 import {
   Check,
   CreditCard,
+  Icon,
   MapPin,
   Minus,
   Plus,
@@ -38,6 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { title } from "process";
 
 const CheckoutStepper = () => {
   // const [currentStep, setCurrentStep] = useState(0);
@@ -102,11 +105,11 @@ const CheckoutStepper = () => {
     keycloak.login();
   };
 
-  console.log("Local items: ", items);
   const handleLocalCartItemTransfer = (
     cartItems: { productId: string; quantity: number }[]
   ) => {
     dispatch(transferCart(cartItems));
+    dispatch(clearLocalCart());
   };
 
   const total = items.reduce(
@@ -121,6 +124,7 @@ const CheckoutStepper = () => {
       : [{ title: "Account", icon: <User className="h-6 w-6" /> }]),
     { title: "Shipping", icon: <MapPin className="h-6 w-6" /> },
     { title: "Payment", icon: <CreditCard className="h-6 w-6" /> },
+    { title: "FinalOrder", Icon: <Check className="h-6 w-6" /> },
     { title: "Confirmation", icon: <Check className="h-6 w-6" /> },
   ];
 
