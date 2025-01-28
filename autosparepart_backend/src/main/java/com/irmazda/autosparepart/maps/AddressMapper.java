@@ -12,7 +12,8 @@ public class AddressMapper {
             address.getAddressLine1(),
             address.getCity(),
             address.getPostalCode(),
-            address.getCountry()
+            address.getCountry(),
+            address.isDefault()
     );
   }
 }

@@ -40,6 +40,9 @@ public class Address extends BaseEntityCreateUpdate {
   @Column(name = "country", nullable = false)
   private String country = "Iran";
 
+  @Column(nullable = false, unique = true)
+  private boolean isDefault = true;
+
   public Address() {
   }
 
@@ -92,5 +95,13 @@ public class Address extends BaseEntityCreateUpdate {
 
   public void setCountry(String country) {
     this.country = country;
+  }
+
+  public boolean isDefault() {
+    return isDefault;
+  }
+
+  public void setDefault(boolean aDefault) {
+    isDefault = aDefault;
   }
 }

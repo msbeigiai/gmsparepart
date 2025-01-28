@@ -46,7 +46,14 @@ public class AddressServiceImpl implements AddressService {
   @Transactional
   public AddressDTO addAddress(AddressRequest request, Principal principal) {
     User user = userService.getUserFromPrincipal(principal);
-    Address newAddress = new Address(user, request.getAddressLine1(), request.getCity(), request.getPostalCode());
+    Address newAddress = new Address();
+    newAddress.setUser(user);
+    newAddress.setAddressLine1(request.getAddressLine1());
+    newAddress.setCity(request.getCity());
+    newAddress.setPostalCode(request.getPostalCode());
+    if (!getAddress(principal).isEmpty()) {
+      newAddress.setDefault(false);
+    }
     Address savedAddress = addressRepository.save(newAddress);
     return addressMapper.mapTo(savedAddress);
   }

@@ -6,17 +6,20 @@ public class AddressDTO {
   private String city;
   private String postalCode;
   private String country;
+  private boolean isDefault;
 
   public AddressDTO(Long addressId,
                     String addressLine1,
                     String city,
                     String postalCode,
-                    String country) {
+                    String country,
+                    boolean isDefault) {
     this.addressId = addressId;
     this.addressLine1 = addressLine1;
     this.city = city;
     this.postalCode = postalCode;
     this.country = country;
+    this.isDefault = isDefault;
   }
 
   public Long getAddressId() {
@@ -57,5 +60,13 @@ public class AddressDTO {
 
   public void setCountry(String country) {
     this.country = country;
+  }
+
+  public boolean isDefault() {
+    return isDefault;
+  }
+
+  public void setDefault(boolean aDefault) {
+    isDefault = aDefault;
   }
 }
