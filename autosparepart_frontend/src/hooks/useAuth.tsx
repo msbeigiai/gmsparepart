@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { authenticateUser } from "@/features/auth/authSlice";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -25,3 +24,7 @@ const useAuth = () => {
 };
 
 export default useAuth;
+
+function authenticateUser(): any {
+  throw new Error("Function not implemented.");
+}

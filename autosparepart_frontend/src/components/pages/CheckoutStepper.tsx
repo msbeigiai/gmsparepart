@@ -19,10 +19,9 @@ import {
   removeFromLocalCart,
   updateLocalQuantity,
 } from "@/features/cart/localCartSlice";
+import { CartItem } from "@/types";
 import {
   Check,
-  CreditCard,
-  Icon,
   MapPin,
   Minus,
   Plus,
@@ -40,17 +39,17 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { title } from "process";
+import OrdersList from "./OrdersList";
 
 const CheckoutStepper = () => {
   // const [currentStep, setCurrentStep] = useState(0);
   const dispatch: AppDispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { items: addresses } = useAppSelector((state) => state.addresses);
-  const { items } = useAppSelector((state) => state.localCart);
+  const { items: localCartItems } = useAppSelector((state) => state.localCart);
   const [nextButtonActive, setNextButtonActive] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState<string>("");
-
+  const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(() => {
     // Check if we're returning from Keycloak login
     const isReturningFromAuth =
@@ -69,11 +68,16 @@ const CheckoutStepper = () => {
 
   useEffect(() => {
     setCurrentStep(0);
+    const defaultAddress = addresses.find((address) => address.default);
+    setDefaultAddressId(
+      defaultAddress ? defaultAddress.addressId.toString() : null
+    );
+    defaultAddress && setSelectedAddress(defaultAddress.addressId.toString());
   }, [dispatch, addresses.length]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      if (isAuthenticated && currentStep === 0 && items.length > 0) {
+      if (isAuthenticated && currentStep === 0 && localCartItems.length > 0) {
         dispatch(fetchAddresses());
         setCurrentStep(1);
         setNextButtonActive(true);
@@ -81,7 +85,7 @@ const CheckoutStepper = () => {
         setNextButtonActive(false);
         setCurrentStep((current) => current + 1);
         if (currentStep === steps.length - 2) {
-          const cartItems = items.map((item) => ({
+          const cartItems = localCartItems.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
           }));
@@ -105,14 +109,12 @@ const CheckoutStepper = () => {
     keycloak.login();
   };
 
-  const handleLocalCartItemTransfer = (
-    cartItems: { productId: string; quantity: number }[]
-  ) => {
+  const handleLocalCartItemTransfer = (cartItems: CartItem[]) => {
     dispatch(transferCart(cartItems));
     dispatch(clearLocalCart());
   };
 
-  const total = items.reduce(
+  const total = localCartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
@@ -123,8 +125,7 @@ const CheckoutStepper = () => {
       ? []
       : [{ title: "Account", icon: <User className="h-6 w-6" /> }]),
     { title: "Shipping", icon: <MapPin className="h-6 w-6" /> },
-    { title: "Payment", icon: <CreditCard className="h-6 w-6" /> },
-    { title: "FinalOrder", Icon: <Check className="h-6 w-6" /> },
+    // { title: "Payment", icon: <CreditCard className="h-6 w-6" /> },
     { title: "Confirmation", icon: <Check className="h-6 w-6" /> },
   ];
 
@@ -140,16 +141,22 @@ const CheckoutStepper = () => {
     dispatch(removeFromLocalCart(productId));
   };
 
+  const Order = () => (
+    <div className="space-y-4">
+      <OrdersList />;
+    </div>
+  );
+
   const CartReview = () => (
     <div className="space-y-4">
-      {items.length === 0 ? (
+      {localCartItems.length === 0 ? (
         <div className="text-center py-8">
           <ShoppingCart className="h-12 w-12 mx-auto text-gray-400 mb-4" />
           <p className="text-gray-500">Your cart is empty</p>
         </div>
       ) : (
         <>
-          {items.map((item) => (
+          {localCartItems.map((item) => (
             <div
               key={item.productId}
               className="flex items-center p-4 border rounded hover:bg-gray-50"
@@ -239,7 +246,7 @@ const CheckoutStepper = () => {
       <CardContent>
         {addresses.length > 0 ? (
           <RadioGroup
-            value={selectedAddress}
+            value={selectedAddress || defaultAddressId || ""}
             onValueChange={handleAddressChange}
             className="w-full"
           >
@@ -318,25 +325,29 @@ const CheckoutStepper = () => {
         <Check className="h-12 w-12 text-green-500" />
       </div>
       <h3 className="text-xl font-medium">Order Confirmed!</h3>
-      <p className="text-gray-500">Thank you for your purchase.</p>
+      <p className="text-gray-500">
+        Thank you for your purchase. Navigate to your order to pay
+      </p>
     </div>
   );
+
+  console.log("currentStep", currentStep);
 
   const renderStepContent = () => {
     // Adjust step content based on authentication
     const authenticatedStepMap = {
       0: <CartReview />,
       1: <ShippingForm />,
-      2: <PaymentForm />,
-      3: <Confirmation />,
+      2: <Confirmation />,
+      // 2: <PaymentForm />,
     };
 
     const unauthenticatedStepMap = {
       0: <CartReview />,
       1: <AccountForm />,
       2: <ShippingForm />,
-      3: <PaymentForm />,
-      4: <Confirmation />,
+      3: <Confirmation />,
+      // 3: <PaymentForm />,
     };
 
     const stepMap = isAuthenticated
@@ -391,7 +402,8 @@ const CheckoutStepper = () => {
             onClick={handleNext}
             disabled={
               currentStep === steps.length - 1 ||
-              (currentStep === 0 && items.length === 0) ||
+              // localCartItems.length === 0 ||
+              (currentStep === 0 && localCartItems.length === 0) ||
               (currentStep === 1 && selectedAddress === "")
             }
           >
