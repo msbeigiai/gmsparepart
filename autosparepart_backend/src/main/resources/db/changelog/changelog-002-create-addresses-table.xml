@@ -25,6 +25,9 @@
       <column name="country" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
+      <column name="is_default" type="boolean">
+        <constraints nullable="false" />
+      </column>
       <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
         <constraints nullable="false" />
       </column>

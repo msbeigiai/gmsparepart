@@ -127,6 +127,7 @@
       <column name="city" value="Helsinki" />
       <column name="postal_code" value="00100" />
       <column name="country" value="Finland" />
+      <column name="is_default" value="TRUE" />
     </insert>
     <insert tableName="addresses">
       <column name="user_id" value="b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22" />
@@ -134,6 +135,7 @@
       <column name="city" value="Espoo" />
       <column name="postal_code" value="02100" />
       <column name="country" value="Finland" />
+      <column name="is_default" value="TRUE" />
     </insert>
     <insert tableName="addresses">
       <column name="user_id" value="c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33" />
@@ -141,6 +143,7 @@
       <column name="city" value="Vantaa" />
       <column name="postal_code" value="01300" />
       <column name="country" value="Finland" />
+      <column name="is_default" value="TRUE" />
     </insert>
     <insert tableName="addresses">
       <column name="user_id" value="d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44" />
@@ -148,6 +151,7 @@
       <column name="city" value="Tampere" />
       <column name="postal_code" value="33100" />
       <column name="country" value="Finland" />
+      <column name="is_default" value="TRUE" />
     </insert>
     <insert tableName="addresses">
       <column name="user_id" value="e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55" />
@@ -155,6 +159,7 @@
       <column name="city" value="Turku" />
       <column name="postal_code" value="20100" />
       <column name="country" value="Finland" />
+      <column name="is_default" value="TRUE" />
     </insert>
 
     <!-- Review mock data -->
