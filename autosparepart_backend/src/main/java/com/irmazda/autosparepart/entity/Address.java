@@ -43,6 +43,9 @@ public class Address extends BaseEntityCreateUpdate {
   @Column(nullable = false, unique = true)
   private boolean isDefault = true;
 
+  @Column(unique = true)
+  private boolean deliveryAddress = false;
+
   public Address() {
   }
 
@@ -103,5 +106,13 @@ public class Address extends BaseEntityCreateUpdate {
 
   public void setDefault(boolean aDefault) {
     isDefault = aDefault;
+  }
+
+  public boolean isDeliveryAddress() {
+    return deliveryAddress;
+  }
+
+  public void setDeliveryAddress(boolean deliveryAddress) {
+    this.deliveryAddress = deliveryAddress;
   }
 }
