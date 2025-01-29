@@ -33,14 +33,17 @@ export const fetchCartItems = createAsyncThunk(
 
 export const transferCart = createAsyncThunk(
   "cart/addItem",
-  async (cartItems: CartItem[], { getState, dispatch, rejectWithValue }) => {
+  async (
+    { cartItems, addressId }: { cartItems: CartItem[]; addressId: number },
+    { getState, dispatch, rejectWithValue }
+  ) => {
     const state: any = getState();
     const token = state.auth.token;
 
     try {
       const response = await axios.post(
         `${API_BASE_URL}/orders/transfer-cart`,
-        { cartItems },
+        { cartItems, addressId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
