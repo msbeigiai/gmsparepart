@@ -2,12 +2,11 @@ package com.irmazda.autosparepart.service.impl;
 
 import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
 import com.irmazda.autosparepart.dto.order.OrderDTO;
-import com.irmazda.autosparepart.entity.Order;
-import com.irmazda.autosparepart.entity.OrderItem;
-import com.irmazda.autosparepart.entity.Product;
-import com.irmazda.autosparepart.entity.User;
+import com.irmazda.autosparepart.entity.*;
 import com.irmazda.autosparepart.entity.enums.OrderStatus;
 import com.irmazda.autosparepart.entity.enums.ReviewStatus;
+import com.irmazda.autosparepart.maps.OrderMapper;
+import com.irmazda.autosparepart.repository.AddressRepository;
 import com.irmazda.autosparepart.repository.OrderItemRepository;
 import com.irmazda.autosparepart.repository.OrderRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
@@ -19,6 +18,7 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -28,15 +28,21 @@ public class OrderServiceImpl implements OrderService {
   private final ProductRepository productRepository;
   private final UserService userService;
   private final OrderItemRepository orderItemRepository;
+  private final AddressRepository addressRepository;
+  private final OrderMapper orderMapper;
 
   public OrderServiceImpl(OrderRepository orderRepository,
                           ProductRepository productRepository,
                           UserService userService,
-                          OrderItemRepository orderItemRepository) {
+                          OrderItemRepository orderItemRepository,
+                          AddressRepository addressRepository,
+                          OrderMapper orderMapper) {
     this.orderRepository = orderRepository;
     this.productRepository = productRepository;
     this.userService = userService;
     this.orderItemRepository = orderItemRepository;
+    this.addressRepository = addressRepository;
+    this.orderMapper = orderMapper;
   }
 
   @Override
@@ -46,6 +52,8 @@ public class OrderServiceImpl implements OrderService {
     order.setUser(user);
     order.setOrderDate(LocalDateTime.now());
     order.setStatus(OrderStatus.PENDING);
+
+    List<Address> userAddresses = addressRepository.findByUserId(user.getUserId());
 
     BigDecimal totalAmount = BigDecimal.ZERO;
 
@@ -67,6 +75,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     order.setTotalAmount(totalAmount);
+
+    for (Address address : userAddresses) {
+      address.setDeliveryAddress(address.getAddressId().equals(request.getAddressId()));
+    }
+
     return orderRepository.save(order);
   }
 
@@ -80,10 +93,14 @@ public class OrderServiceImpl implements OrderService {
     Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order with this ID not found!"));
 
+    User user = order.getUser();
+
     List<OrderItem> orderItems = order.getOrderItems();
 
+    Address deliveryAddress = addressRepository.findByUserId(user.getUserId()).stream().filter(Address::isDeliveryAddress).findFirst()
+            .orElseThrow(() -> new RuntimeException("No delivery address found!"));
 
-    return null;
+    return orderMapper.mapTo(order, deliveryAddress);
   }
 
 
