@@ -110,7 +110,7 @@ const CheckoutStepper = () => {
   };
 
   const handleLocalCartItemTransfer = (cartItems: CartItem[]) => {
-    dispatch(transferCart(cartItems));
+    dispatch(transferCart({ cartItems, addressId: Number(selectedAddress) }));
     dispatch(clearLocalCart());
   };
 
