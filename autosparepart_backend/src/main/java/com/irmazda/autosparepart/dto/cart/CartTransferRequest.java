@@ -6,6 +6,7 @@ import java.util.UUID;
 public class CartTransferRequest {
 
   private List<CartItemDTO> cartItems;
+  private Long addressId;
 
   public List<CartItemDTO> getCartItems() {
     return cartItems;
@@ -13,6 +14,14 @@ public class CartTransferRequest {
 
   public void setCartItems(List<CartItemDTO> cartItems) {
     this.cartItems = cartItems;
+  }
+
+  public Long getAddressId() {
+    return addressId;
+  }
+
+  public void setAddressId(Long addressId) {
+    this.addressId = addressId;
   }
 
   public static class CartItemDTO {
