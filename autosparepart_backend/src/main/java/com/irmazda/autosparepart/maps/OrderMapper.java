@@ -6,6 +6,8 @@ import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.entity.OrderItem;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,20 +20,29 @@ public class OrderMapper {
     List<OrderItem> orderItems = order.getOrderItems();
 
     orderDTO.setOrderStatus(order.getStatus());
-    orderDTO.setDeliveryAddress(address.toString());
+    orderDTO.setDeliveryAddress(address.getCountry() + ", " +
+            address.getCity() + ", " +
+            address.getPostalCode() + ", " +
+            address.getAddressLine1());
     orderDTO.setCreationDate(order.getOrderDate());
+
+    BigDecimal totalOrderAmount = BigDecimal.ZERO;
+
+    List<OrderDTO.OrderItemDTO> orderItemDTOS = new ArrayList<>();
 
     for (OrderItem orderItem : orderItems) {
       OrderDTO.OrderItemDTO orderItemDTO = orderItemMapper(orderItem);
-      orderDTO.getOrderItemDTOS().add(orderItemDTO);
+      orderItemDTOS.add(orderItemDTO);
+      totalOrderAmount = totalOrderAmount.add(orderItem.getSubtotal());
     }
-
+    orderDTO.setOrderItemDTOS(orderItemDTOS);
+    orderDTO.setTotalOrderAmount(totalOrderAmount);
     return orderDTO;
   }
 
   private OrderDTO.OrderItemDTO orderItemMapper(OrderItem orderItem) {
     OrderDTO.OrderItemDTO orderItemDTO = new OrderDTO.OrderItemDTO();
-    orderItemDTO.setProductId(orderItemDTO.getProductId());
+    orderItemDTO.setProductId(orderItem.getProduct().getProductId());
     orderItemDTO.setQuantity(orderItem.getQuantity());
     orderItemDTO.setSubTotal(orderItem.getSubtotal());
     orderItemDTO.setProductName(orderItem.getProduct().getName());

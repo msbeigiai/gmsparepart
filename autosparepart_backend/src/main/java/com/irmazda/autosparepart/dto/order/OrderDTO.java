@@ -1,11 +1,10 @@
 package com.irmazda.autosparepart.dto.order;
 
-import com.irmazda.autosparepart.entity.Address;
-import org.hibernate.validator.constraints.UUID;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class OrderDTO {
 
@@ -13,6 +12,7 @@ public class OrderDTO {
   private String deliveryAddress;
   private LocalDateTime creationDate;
   private String orderStatus;
+  private BigDecimal totalOrderAmount;
 
   public List<OrderItemDTO> getOrderItemDTOS() {
     return orderItemDTOS;
@@ -44,6 +44,14 @@ public class OrderDTO {
 
   public void setOrderStatus(String orderStatus) {
     this.orderStatus = orderStatus;
+  }
+
+  public BigDecimal getTotalOrderAmount() {
+    return totalOrderAmount;
+  }
+
+  public void setTotalOrderAmount(BigDecimal totalOrderAmount) {
+    this.totalOrderAmount = totalOrderAmount;
   }
 
   public static class OrderItemDTO {
