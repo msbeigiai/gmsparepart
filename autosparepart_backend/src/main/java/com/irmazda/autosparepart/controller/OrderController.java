@@ -1,6 +1,7 @@
 package com.irmazda.autosparepart.controller;
 
 import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
+import com.irmazda.autosparepart.dto.order.OrderDTO;
 import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.service.OrderService;
 import com.irmazda.autosparepart.service.UserService;
@@ -29,11 +30,9 @@ public class OrderController {
   }
 
   @GetMapping("/{orderId}")
-  public ResponseEntity<Order> getOrderById(@PathVariable UUID orderId,
-                                            Principal principal) {
-//    orderService.
-
-    return null;
+  public ResponseEntity<OrderDTO> getOrderById(@PathVariable UUID orderId,
+                                               Principal principal) {
+    return ResponseEntity.ok().body(orderService.getOrderById(orderId, principal));
   }
 
 }

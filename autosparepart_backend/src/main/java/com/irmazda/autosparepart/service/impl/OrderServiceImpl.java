@@ -95,8 +95,6 @@ public class OrderServiceImpl implements OrderService {
 
     User user = order.getUser();
 
-    List<OrderItem> orderItems = order.getOrderItems();
-
     Address deliveryAddress = addressRepository.findByUserId(user.getUserId()).stream().filter(Address::isDeliveryAddress).findFirst()
             .orElseThrow(() -> new RuntimeException("No delivery address found!"));
 
