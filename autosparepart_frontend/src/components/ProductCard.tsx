@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "./ui/badge";
 import { ToastAction } from "./ui/toast";
+import { Link } from "react-router-dom";
+import { ProductDetails } from "./pages/ProductDetails";
 
 interface ProductCardProps {
   product: Product;
@@ -157,7 +159,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Title */}
         <div className="flex justify-between">
           <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-            {product.name}
+            <Link to={`/products/${product.productId}`}>{product.name}</Link>
           </h3>
           <Badge variant="outline" className="rounded-full">
             {product.stockQuantity} in stock
