@@ -7,12 +7,20 @@ import java.util.List;
 import java.util.UUID;
 
 public class OrderDTO {
-
+  private UUID orderId;
   private List<OrderItemDTO> orderItemDTOS;
   private String deliveryAddress;
   private LocalDateTime creationDate;
   private String orderStatus;
   private BigDecimal totalOrderAmount;
+
+  public UUID getOrderId() {
+    return orderId;
+  }
+
+  public void setOrderId(UUID orderId) {
+    this.orderId = orderId;
+  }
 
   public List<OrderItemDTO> getOrderItemDTOS() {
     return orderItemDTOS;

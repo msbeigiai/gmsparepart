@@ -20,6 +20,7 @@ public class OrderMapper {
     List<OrderItem> orderItems = order.getOrderItems();
 
     orderDTO.setOrderStatus(order.getStatus());
+    orderDTO.setOrderId(order.getOrderId());
     orderDTO.setDeliveryAddress(address.getCountry() + ", " +
             address.getCity() + ", " +
             address.getPostalCode() + ", " +
