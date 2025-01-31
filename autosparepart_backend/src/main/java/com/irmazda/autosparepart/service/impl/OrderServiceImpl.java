@@ -1,10 +1,12 @@
 package com.irmazda.autosparepart.service.impl;
 
 import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
+import com.irmazda.autosparepart.dto.order.ListOrderDTO;
 import com.irmazda.autosparepart.dto.order.OrderDTO;
 import com.irmazda.autosparepart.entity.*;
 import com.irmazda.autosparepart.entity.enums.OrderStatus;
 import com.irmazda.autosparepart.entity.enums.ReviewStatus;
+import com.irmazda.autosparepart.maps.OrderListMapper;
 import com.irmazda.autosparepart.maps.OrderMapper;
 import com.irmazda.autosparepart.repository.AddressRepository;
 import com.irmazda.autosparepart.repository.OrderItemRepository;
@@ -30,19 +32,22 @@ public class OrderServiceImpl implements OrderService {
   private final OrderItemRepository orderItemRepository;
   private final AddressRepository addressRepository;
   private final OrderMapper orderMapper;
+  private final OrderListMapper orderListMapper;
 
   public OrderServiceImpl(OrderRepository orderRepository,
                           ProductRepository productRepository,
                           UserService userService,
                           OrderItemRepository orderItemRepository,
                           AddressRepository addressRepository,
-                          OrderMapper orderMapper) {
+                          OrderMapper orderMapper,
+                          OrderListMapper orderListMapper) {
     this.orderRepository = orderRepository;
     this.productRepository = productRepository;
     this.userService = userService;
     this.orderItemRepository = orderItemRepository;
     this.addressRepository = addressRepository;
     this.orderMapper = orderMapper;
+    this.orderListMapper = orderListMapper;
   }
 
   @Override
@@ -85,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public List<Order> getUserOrders(User user) {
-    return orderRepository.findByUser(user);
+    return orderRepository.findByUser(user.getUserId());
   }
 
   @Override
@@ -99,6 +104,13 @@ public class OrderServiceImpl implements OrderService {
             .orElseThrow(() -> new RuntimeException("No delivery address found!"));
 
     return orderMapper.mapTo(order, deliveryAddress);
+  }
+
+  @Override
+  public List<ListOrderDTO> getAllOrders(Principal principal) {
+    User user = userService.getUserFromPrincipal(principal);
+    List<Order> orders = orderRepository.findByUser(user.getUserId());
+    return orders.stream().map(orderListMapper::mapTo).toList();
   }
 
 

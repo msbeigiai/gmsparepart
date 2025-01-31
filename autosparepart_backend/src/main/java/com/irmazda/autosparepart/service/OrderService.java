@@ -1,6 +1,7 @@
 package com.irmazda.autosparepart.service;
 
 import com.irmazda.autosparepart.dto.cart.CartTransferRequest;
+import com.irmazda.autosparepart.dto.order.ListOrderDTO;
 import com.irmazda.autosparepart.dto.order.OrderDTO;
 import com.irmazda.autosparepart.entity.Order;
 import com.irmazda.autosparepart.entity.OrderItem;
@@ -19,4 +20,6 @@ public interface OrderService {
   List<Order> getUserOrders(User user);
 
   OrderDTO getOrderById(UUID orderId, Principal principal);
+
+  List<ListOrderDTO> getAllOrders(Principal principal);
 }
