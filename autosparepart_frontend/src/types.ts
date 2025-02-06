@@ -1,3 +1,5 @@
+import { OrderStatus } from "./components/pages/Profile";
+
 export const API_BASE_URL = "http://localhost:8081/api/v1";
 
 export interface Product {
@@ -55,6 +57,7 @@ export interface Address {
   city: string;
   postalCode: string;
   country: string;
+  default: boolean;
 }
 
 export interface BaseAddressRequest {
@@ -85,4 +88,20 @@ export interface UserProfile {
   firstName?: string;
   lastName?: string;
   createdDate?: string;
+}
+
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  subTotal: number;
+  quantity: number;
+}
+
+export interface Order {
+  orderId: string;
+  orderStatus: "COMPLETED" | "PENDING" | "DELIVERED" | "PROCESSING";
+  creationDate: string;
+  deliveryAddress: string;
+  totalOrderAmount: number;
+  orderItemDTOS: OrderItem[];
 }

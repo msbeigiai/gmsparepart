@@ -26,14 +26,14 @@ function App() {
   }, [dispatch]);
 
   return (
-    <div className="flex">
+    <div className="m-0">
       <Toaster />
       {/* <SidebarProvider>
         <AppSidebar />
         <SidebarTrigger /> */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-col">
         <Navbar />
-        <main className="flex-1 p-4">
+        <main className="">
           <AppRoutes />
         </main>
       </div>
