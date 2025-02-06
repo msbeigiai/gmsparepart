@@ -1,23 +1,24 @@
 import { OrderItem } from "@/types";
-import React from "react";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
+import { ShoppingBasket } from "lucide-react";
 
 interface OrderItemCartProps {
   orderItem: OrderItem;
 }
 const OrderItemCard = ({ orderItem }: OrderItemCartProps) => {
-  console.log("orderItem", orderItem);
-
   return (
-    <div className="w-full flex justify-center bg-white">
-      <Card className="w-full">
-        <CardHeader>{orderItem.productName}</CardHeader>
-        <CardContent>
-          <p>Price: {orderItem.productPrice}</p>
-          <p>Quantity: {orderItem.quantity}</p>
-          <p>Subtotal: {orderItem.subtotalPrice}</p>
-        </CardContent>
-      </Card>
+    <div className="bg-slate-300 flex justify-between items-center w-full py-4 px-3 rounded-md">
+      <div className="flex items-center ">
+        <ShoppingBasket size={32} className="text-slate-700 ml-2" />
+        <Button variant="link" size="lg" className="text-xl">
+          <Link to={`/products/${orderItem.productId}`}>
+            {orderItem.productName}
+          </Link>
+        </Button>
+      </div>
+      <span>Price: {orderItem.subTotal}$</span>
+      <span>Quantity: {orderItem.quantity}</span>
     </div>
   );
 };
