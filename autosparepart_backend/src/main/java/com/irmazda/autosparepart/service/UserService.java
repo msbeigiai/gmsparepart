@@ -1,22 +1,21 @@
 package com.irmazda.autosparepart.service;
 
-import com.irmazda.autosparepart.config.KeycloakClient;
-import com.irmazda.autosparepart.dto.user.KeycloakUserProfile;
-import com.irmazda.autosparepart.dto.user.UserProfile;
-import com.irmazda.autosparepart.entity.User;
-import com.irmazda.autosparepart.repository.UserRepository;
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
-import java.util.UUID;
+import com.irmazda.autosparepart.config.KeycloakClient;
+import com.irmazda.autosparepart.dto.user.KeycloakUserProfile;
+import com.irmazda.autosparepart.dto.user.UserProfile;
+import com.irmazda.autosparepart.entity.User;
+import com.irmazda.autosparepart.repository.UserRepository;
 
 @Service
 @Transactional
@@ -27,7 +26,7 @@ public class UserService {
   private final KeycloakClient keycloakClient;
 
   public UserService(UserRepository userRepository,
-                     KeycloakClient keycloakClient) {
+      KeycloakClient keycloakClient) {
     this.userRepository = userRepository;
     this.keycloakClient = keycloakClient;
   }
@@ -36,7 +35,7 @@ public class UserService {
     if (principal instanceof JwtAuthenticationToken jwtAuthenticationToken) {
       String userId = (String) jwtAuthenticationToken.getTokenAttributes().get("sub");
       return userRepository.findByUserId(userId)
-              .orElseThrow(() -> new RuntimeException("User not found"));
+          .orElseThrow(() -> new RuntimeException("User not found"));
     }
     throw new RuntimeException("Invalid Principal type");
   }
@@ -51,7 +50,7 @@ public class UserService {
     if (existsByUserId(user.getUserId())) {
       logger.debug("User already exists: {}", user.getUserId());
       return userRepository.findByUserId(user.getUserId())
-              .orElseThrow(() -> new IllegalStateException("User should exist but wasn't found"));
+          .orElseThrow(() -> new IllegalStateException("User should exist but wasn't found"));
     }
     return userRepository.save(user);
   }
@@ -62,12 +61,11 @@ public class UserService {
     KeycloakUserProfile keycloakUserProfile = keycloakClient.getUserProfile(user.getUserId());
 
     return new UserProfile(
-            user.getUserId(),
-            user.getEmail(),
-            user.getEmail(),
-            user.getEmail(),
-            user.getCreatedAt(),
-            keycloakUserProfile.getAttributes());
+        user.getUserId(),
+        user.getEmail(),
+        user.getEmail(),
+        user.getEmail(),
+        user.getCreatedAt(),
+        keycloakUserProfile.getAttributes());
   }
 }
-
