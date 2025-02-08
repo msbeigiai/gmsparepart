@@ -1,31 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Heart, Share2, ShoppingCart, Minus, Plus, Star, StarHalf } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { addToLocalCart } from '@/features/cart/localCartSlice';
-import { ToastAction } from '../ui/toast';
-import { useToast } from '@/hooks/use-toast';
-import { fetchProductReviews } from '@/features/review/reviewSlice';
-import ProductReviews from './ProductReviews';
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { addToLocalCart } from "@/features/cart/localCartSlice";
+import { fetchProductReviews } from "@/features/review/reviewSlice";
+import { useToast } from "@/hooks/use-toast";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ToastAction } from "../ui/toast";
+import ProductReviews from "./ProductReviews";
 
 // Type definitions
 interface ProductImage {
@@ -52,22 +35,20 @@ export const ProductDetails = () => {
   const { productId } = useParams();
   const [quantity, setQuantity] = useState(1);
   const { items } = useAppSelector((state) => state.localCart);
-  const{item: pageContent} = useAppSelector((state)=>state.reviews)
+  const { item: pageContent } = useAppSelector((state) => state.reviews);
   const dispatch = useAppDispatch();
 
   const { toast } = useToast();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    dispatch(fetchProductReviews({productId: productId!}));
-  },[dispatch])
-
+  useEffect(() => {
+    dispatch(fetchProductReviews({ productId: productId! }));
+  }, [dispatch]);
 
   // Replace with your actual selector
   const product = useAppSelector((state) =>
-    state.products.items.find(p => p.productId === productId)
+    state.products.items.find((p) => p.productId === productId)
   );
-
 
   if (!product) {
     return (
@@ -80,10 +61,14 @@ export const ProductDetails = () => {
   const handleAddToCart = () => {
     dispatch(addToLocalCart({ product, quantity: quantity }));
     toast({
-      variant: "destructive",
+      variant: "default",
       title: "Product added to cart",
       description: "You can review your cart and proceed to checkout",
-      action: <ToastAction altText="Go to cart" onClick={() => navigate('/checkout')}>Go to cart</ToastAction>,
+      action: (
+        <ToastAction altText="Go to cart" onClick={() => navigate("/checkout")}>
+          Go to cart
+        </ToastAction>
+      ),
     });
   };
 
@@ -98,7 +83,7 @@ export const ProductDetails = () => {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain m-2 border-2 rounded-lg outline-none border-slate-100"
                 />
               </div>
               {/* Product Info */}
@@ -112,7 +97,19 @@ export const ProductDetails = () => {
                   </p>
                 </div>
                 <p className="text-gray-600">
-                  {product.description}
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Recusandae et adipisci eligendi ducimus debitis iste dolorem
+                  placeat sed, delectus eveniet earum libero laboriosam nesciunt
+                  perspiciatis, quidem fuga cum aliquam quaerat omnis excepturi
+                  ea accusamus. Rerum repellendus deleniti quisquam et nobis
+                  iste? Perspiciatis explicabo natus pariatur eum reprehenderit
+                  et nulla, saepe delectus? Expedita dolor magni, non adipisci
+                  dolorem facilis repudiandae totam id perferendis fugiat dicta
+                  quod necessitatibus magnam modi, iure aperiam! Consequuntur
+                  dolorum, quos accusamus reiciendis qui nisi placeat eveniet
+                  atque nihil omnis molestiae sequi dolore quam, pariatur
+                  officia illo, totam vero in corrupti veritatis! Quibusdam
+                  repellat facilis atque magnam ducimus.
                 </p>
                 {/* Quantity Selector */}
                 <div className="flex items-center space-x-4">
@@ -136,11 +133,7 @@ export const ProductDetails = () => {
                   </div>
                 </div>
                 {/* Add to Cart Button */}
-                <Button
-                  className="w-full"
-                  size="lg"
-                  onClick={handleAddToCart}
-                >
+                <Button className="w-full" size="lg" onClick={handleAddToCart}>
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Add to Cart
                 </Button>
@@ -149,7 +142,7 @@ export const ProductDetails = () => {
           </CardContent>
         </Card>
       </div>
-        <ProductReviews reviews={pageContent.content} />
+      <ProductReviews reviews={pageContent.content} />
     </div>
   );
 };
