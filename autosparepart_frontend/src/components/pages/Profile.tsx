@@ -19,6 +19,8 @@ import {
 } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
 import { fetchFavorites } from "@/features/favorite/favoriteSlice";
+import { fetchAllOrders } from "@/features/order/orderSlice";
+import { fetchUserProfile } from "@/features/user/userSlice";
 import { AddAddressRequest } from "@/types";
 import {
   Bell,
@@ -30,21 +32,30 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import AddressForm from "../AddressForm";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { fetchUserProfile } from "@/features/user/userSlice";
+import OrderStatusBadge from "./OrderStatusBadge";
+
+export enum OrderStatus {
+  COMPLETED = "COMPLETED",
+  PENDING = "PENDING",
+  DELIVERED = "DELIVERED",
+  PROCESSING = "PROCESSING",
+}
 
 const EcommerceProfile = () => {
   const dispatch = useAppDispatch();
   const [showForm, setShowForm] = useState(false);
   const { items: addresses } = useAppSelector((state) => state.addresses);
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { items: favorites } = useAppSelector((state) => state.favorites);
   const { item: userProfile } = useAppSelector((state) => state.users);
+  const { items: orders } = useAppSelector((state) => state.order);
   const [editingAddress, setEditingAddress] =
     useState<AddAddressRequest | null>(null);
   const formRef = useRef<{ reset: () => void }>(null);
@@ -54,10 +65,11 @@ const EcommerceProfile = () => {
       dispatch(fetchAddresses());
       dispatch(fetchFavorites());
       dispatch(fetchUserProfile());
+      dispatch(fetchAllOrders());
     }
-  }, [dispatch, isAuthenticated, addresses.length]);
+  }, [dispatch, isAuthenticated, addresses.length, orders.length]);
 
-  console.log("USER PROFILE: ", userProfile);
+  console.log("ORDERS: ", orders);
 
   const handleDeleteAddress = (addressId: number) => {
     dispatch(deleteAddress({ addressId }));
@@ -152,7 +164,8 @@ const EcommerceProfile = () => {
               <div className="flex flex-col gap-2">
                 <Button>
                   <ShoppingBag className="h-4 w-4 mr-2" />
-                  Continue Shopping
+
+                  <Link to="/products">Continue Shopping</Link>
                 </Button>
                 <Button variant="outline">
                   <Bell className="h-4 w-4 mr-2" />
@@ -183,33 +196,48 @@ const EcommerceProfile = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="border-b last:border-0 py-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className="h-16 w-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Package className="h-8 w-8 text-gray-500" />
+                {orders.length > 0 &&
+                  orders.map((order) => (
+                    <div
+                      key={order.orderId}
+                      className="border-b last:border-0 py-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="h-16 w-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <Package className="h-8 w-8 text-gray-500" />
+                          </div>
+                          <div>
+                            <p className="font-medium">
+                              Order #{order.orderId.slice(0, 8).toUpperCase()}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Placed on {order.creationDate}, 2024
+                            </p>
+                            <OrderStatusBadge
+                              orderStatus={
+                                OrderStatus[
+                                  order.orderStatus as keyof typeof OrderStatus
+                                ]
+                              }
+                              size="Small"
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium">Order #{2024000 + i}</p>
-                          <p className="text-sm text-gray-600">
-                            Placed on March {i}, 2024
+                        <div className="text-right">
+                          <p className="font-medium">
+                            ${order.totalOrderAmount}
                           </p>
-                          <span className="inline-flex items-center px-2 py-1 mt-1 bg-green-100 text-green-800 text-xs rounded-full">
-                            Delivered
-                          </span>
+                          <Link to={`/orders/${order.orderId}`}>
+                            <Button variant="ghost" size="sm" className="mt-2">
+                              View Details
+                              <ExternalLink className="h-4 w-4 ml-2" />
+                            </Button>
+                          </Link>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">$149.99</p>
-                        <Button variant="ghost" size="sm" className="mt-2">
-                          View Details
-                          <ExternalLink className="h-4 w-4 ml-2" />
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </CardContent>
             </Card>
           </TabsContent>
@@ -230,11 +258,13 @@ const EcommerceProfile = () => {
                         <div className="flex justify-between items-start">
                           <div>
                             <h3 className="font-semibold mb-2">
-                              {address.addressId === 1 ? "Home" : "Office"}
-                              {address.addressId && (
-                                <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                              {address.addressId === 1 ? "Home" : ""}
+                              {address.default ? (
+                                <span className="ml-0 text-md bg-blue-100 text-blue-800 px-2 py-1 rounded-md">
                                   Default
                                 </span>
+                              ) : (
+                                ""
                               )}
                             </h3>
                             <p className="text-gray-600">
