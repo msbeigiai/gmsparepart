@@ -1,20 +1,17 @@
 import { useAppSelector } from "@/app/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { keycloak } from "@/features/auth/authSlice";
 import { cn } from "@/lib/utils";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserStatusHover from "../UserStatusHover";
-import { keycloak } from "@/features/auth/authSlice";
-
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
-  const [showUserEmail, setShowUserEmail] = React.useState(false);
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const [loginUrl, setLoginUrl] = React.useState<string | null>(null);
   const { items } = useAppSelector((state) => state.localCart);
 
   const handleLogin = () => {
@@ -23,10 +20,9 @@ const Navbar: React.FC = () => {
 
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
-
   return (
     <nav className={cn("bg-card text-card-foreground shadow-md")}>
-      <div className="container mx-auto px-4 flex justify-between items-center h-16">
+      <div className="container mx-auto px-4 flex justify-between items-center h-20">
         {/* Left: Logo */}
         <Link to="/" className="text-xl font-bold">
           MazPARTS
@@ -68,11 +64,7 @@ const Navbar: React.FC = () => {
           </Button>
 
           {isAuthenticated ? (
-            <Link to="/profile">
-              {user?.email && (
-                <UserStatusHover />
-              )}
-            </Link>
+            <Link to="/profile">{user?.email && <UserStatusHover />}</Link>
           ) : (
             <Button variant="ghost" size="icon" onClick={handleLogin}>
               <User />

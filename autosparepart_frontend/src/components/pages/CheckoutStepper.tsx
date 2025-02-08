@@ -13,12 +13,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { fetchAddresses } from "@/features/address/addressSlice";
 import { keycloak } from "@/features/auth/authSlice";
-import { transferCart } from "@/features/cart/cartSlice";
 import {
   clearLocalCart,
   removeFromLocalCart,
   updateLocalQuantity,
 } from "@/features/cart/localCartSlice";
+import { transferCart } from "@/features/order/orderSlice";
 import { CartItem } from "@/types";
 import {
   Check,
@@ -39,14 +39,15 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import OrdersList from "./OrdersList";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutStepper = () => {
-  // const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
   const { items: addresses } = useAppSelector((state) => state.addresses);
   const { items: localCartItems } = useAppSelector((state) => state.localCart);
+  const { pendingOrderId } = useAppSelector((state) => state.order);
   const [nextButtonActive, setNextButtonActive] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState<string>("");
   const [defaultAddressId, setDefaultAddressId] = useState<string | null>(null);
@@ -74,6 +75,12 @@ const CheckoutStepper = () => {
     );
     defaultAddress && setSelectedAddress(defaultAddress.addressId.toString());
   }, [dispatch, addresses.length]);
+
+  function handleNavigateToOrder() {
+    if (pendingOrderId) {
+      navigate(`/orders/${pendingOrderId}`);
+    }
+  }
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -112,6 +119,7 @@ const CheckoutStepper = () => {
   const handleLocalCartItemTransfer = (cartItems: CartItem[]) => {
     dispatch(transferCart({ cartItems, addressId: Number(selectedAddress) }));
     dispatch(clearLocalCart());
+    console.log("Pending orderId", pendingOrderId);
   };
 
   const total = localCartItems.reduce(
@@ -143,7 +151,7 @@ const CheckoutStepper = () => {
 
   const Order = () => (
     <div className="space-y-4">
-      <OrdersList />;
+      <Order />;
     </div>
   );
 
@@ -410,8 +418,10 @@ const CheckoutStepper = () => {
             {currentStep === steps.length - 2 ? "Place Order" : "Next"}
           </Button>
         ) : (
-          <Button onClick={handleNext} disabled={currentStep === 1}>
-            {currentStep === steps.length - 2 ? "Place Order" : "Next"}
+          <Button onClick={handleNavigateToOrder} disabled={currentStep === 1}>
+            {currentStep === steps.length - 2 && pendingOrderId
+              ? "Place Order"
+              : "Thanks for your purchase, navigate to checkout"}
           </Button>
         )}
       </CardFooter>
