@@ -28,12 +28,9 @@ function App() {
   return (
     <div className="m-0">
       <Toaster />
-      {/* <SidebarProvider>
-        <AppSidebar />
-        <SidebarTrigger /> */}
       <div className="flex flex-col">
         <Navbar />
-        <main className="">
+        <main className="m-3">
           <AppRoutes />
         </main>
       </div>
