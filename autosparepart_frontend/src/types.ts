@@ -1,5 +1,3 @@
-import { OrderStatus } from "./components/pages/Profile";
-
 export const API_BASE_URL = "http://localhost:8081/api/v1";
 
 export interface Product {
@@ -78,7 +76,7 @@ export interface Favorite {
   favoriteId: number;
   productId: string;
   productName: string;
-  productPrice: string;
+  productPrice: number;
   productImageUrl: string;
 }
 
@@ -99,7 +97,7 @@ export interface OrderItem {
 
 export interface Order {
   orderId: string;
-  orderStatus: "COMPLETED" | "PENDING" | "DELIVERED" | "PROCESSING";
+  orderStatus: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
   creationDate: string;
   deliveryAddress: string;
   totalOrderAmount: number;
