@@ -12,11 +12,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/types";
 import { Eye, Heart, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "./ui/badge";
 import { ToastAction } from "./ui/toast";
-import { Link } from "react-router-dom";
-import { ProductDetails } from "./pages/ProductDetails";
+import { keycloak } from "@/features/auth/authSlice";
 
 interface ProductCardProps {
   product: Product;
@@ -67,7 +66,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         title: "Authentication Required",
         description: "Please login to add items to favorites",
         action: (
-          <ToastAction altText="Login" onClick={() => navigate("/login")}>
+          <ToastAction altText="Login" onClick={() => keycloak.login()}>
             Login
           </ToastAction>
         ),
@@ -147,7 +146,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
             />
           </Button>
           <Button size="icon" variant="secondary" className="rounded-full">
-            <Eye className="h-4 w-4" />
+            <Link to={`/products/${product.productId}`}>
+              <Eye className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </div>
@@ -161,7 +162,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <h3 className="font-semibold text-lg mb-2 line-clamp-2">
             <Link to={`/products/${product.productId}`}>{product.name}</Link>
           </h3>
-          <Badge variant="outline" className="rounded-full">
+          <Badge variant="outline" className="rounded-md">
             {product.stockQuantity} in stock
           </Badge>
         </div>
