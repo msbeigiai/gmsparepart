@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AppDispatch } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { keycloak } from "@/features/auth/authSlice";
 import { addToLocalCart } from "@/features/cart/localCartSlice";
 import {
   addToFavorite,
@@ -10,12 +11,17 @@ import {
 } from "@/features/favorite/favoriteSlice";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/types";
-import { Eye, Heart, ShoppingCart } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Heart,
+  ShoppingCart,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Badge } from "./ui/badge";
 import { ToastAction } from "./ui/toast";
-import { keycloak } from "@/features/auth/authSlice";
 
 interface ProductCardProps {
   product: Product;
@@ -24,13 +30,19 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [localWishlisted, setLocalWishlisted] = useState(false);
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch: AppDispatch = useAppDispatch();
   const { items: favorites } = useAppSelector((state) => state.favorites);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const discount = Math.round(product.price / 100);
+
+  // Convert single image to array or use existing array
+  const images = Array.isArray(product.imageUrls)
+    ? product.imageUrls
+    : [product.imageUrls];
 
   useEffect(() => {
     const isItemWishlisted = favorites.some(
@@ -74,11 +86,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
       return;
     }
 
-    const isCurrentlyWishlisted = localWishlisted; // Store current state
+    const isCurrentlyWishlisted = localWishlisted;
 
     try {
       if (isCurrentlyWishlisted) {
-        setLocalWishlisted(!isCurrentlyWishlisted); // Optimistically update
+        setLocalWishlisted(false);
         await dispatch(removeFavorite({ productId })).unwrap();
         toast({
           variant: "default",
@@ -86,7 +98,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           description: "Product removed from your favorites list",
         });
       } else {
-        setLocalWishlisted(!isCurrentlyWishlisted); // Optimistically update
+        setLocalWishlisted(true);
         await dispatch(addToFavorite({ productId })).unwrap();
         toast({
           variant: "default",
@@ -95,13 +107,23 @@ const ProductCard = ({ product }: ProductCardProps) => {
         });
       }
     } catch (error) {
-      setLocalWishlisted(isCurrentlyWishlisted); // Revert to original state if error
+      setLocalWishlisted(isCurrentlyWishlisted);
       toast({
         variant: "destructive",
         title: "Action failed",
         description: "Failed to update favorites. Please try again.",
       });
     }
+  };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   return (
@@ -113,13 +135,51 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Product Image and Badges */}
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <img
-          src={product.image}
-          alt={product.name}
+          src={images[currentImageIndex]}
+          alt={`${product.name} - Image ${currentImageIndex + 1}`}
           className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-300"
         />
 
+        {/* Image Navigation - Only show if multiple images exist */}
+        {images.length > 1 && isHovered && (
+          <>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full opacity-70 hover:opacity-100 z-10"
+              onClick={prevImage}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant="secondary"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full opacity-70 hover:opacity-100 z-10"
+              onClick={nextImage}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </>
+        )}
+
+        {/* Image Indicators */}
+        {images.length > 1 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+            {images.map((_, index) => (
+              <div
+                key={index}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  currentImageIndex === index
+                    ? "bg-white scale-110"
+                    : "bg-white/50"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-2">
+        <div className="absolute top-2 left-2 flex flex-col gap-2 z-10">
           {true && <Badge className="bg-blue-500 hover:bg-blue-600">New</Badge>}
           {discount !== 0 && (
             <Badge className="bg-red-500 hover:bg-red-600">-{discount}%</Badge>
@@ -167,24 +227,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </Badge>
         </div>
 
-        {/* Rating */}
-        {/* <div className="flex items-center mb-2">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-4 w-4 ${i < Math.floor(3)
-                  ? 'text-yellow-400 fill-yellow-400'
-                  : 'text-gray-300'
-                  }`}
-              />
-            ))}
-          </div>
-          <span className="text-sm text-gray-600 ml-2">
-            ({3})
-          </span>
-        </div> */}
-
         {/* Price */}
         <div className="flex items-center gap-2 mb-3">
           <span className="text-3xl text-red-500 font-bold">
@@ -212,4 +254,5 @@ const ProductCard = ({ product }: ProductCardProps) => {
     </Card>
   );
 };
+
 export default ProductCard;

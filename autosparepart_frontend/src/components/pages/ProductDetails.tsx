@@ -81,7 +81,7 @@ export const ProductDetails = () => {
               {/* Product Image */}
               <div className="relative aspect-square">
                 <img
-                  src={product.image}
+                  src={product.imageUrls}
                   alt={product.name}
                   className="w-full h-full object-contain m-2 border-2 rounded-lg outline-none border-slate-100"
                 />
