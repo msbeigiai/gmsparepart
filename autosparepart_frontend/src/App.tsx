@@ -1,18 +1,23 @@
-import { useEffect, useCallback } from "react";
-import { useAppDispatch } from "./app/hooks";
+import { useCallback, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import Navbar from "./components/navigation/Navbar";
 import { Toaster } from "./components/ui/toaster";
 import {
   initializeKeycloak,
   keycloak,
   loginSuccess,
-  tokenRefreshed,
   logout,
+  tokenRefreshed,
 } from "./features/auth/authSlice";
 import AppRoutes from "./routes/AppRoutes";
+import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
+import AppSidebar from "./components/navigation/AppSidebar";
+import Cookies from "js-cookie";
 
 function App() {
   const dispatch = useAppDispatch();
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const defaultOpen = Cookies.get("sidebar_state")?.value === "true";
 
   const refreshToken = useCallback(async () => {
     try {
@@ -83,15 +88,24 @@ function App() {
   }, [refreshToken]);
 
   return (
-    <div className="m-0">
-      <Toaster />
-      <div className="flex flex-col">
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <div className="min-h-screen">
         <Navbar />
-        <main className="m-3">
-          <AppRoutes />
-        </main>
+        <div className="flex pt-20">
+          <AppSidebar />
+          <div className="flex-1 w-full">
+            <Toaster />
+            <main className="p-4 max-w-full">
+              {isAuthenticated &&
+              user?.realm_access?.roles.includes("ADMIN", 0) ? (
+                <SidebarTrigger />
+              ) : null}
+              <AppRoutes />
+            </main>
+          </div>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
 
