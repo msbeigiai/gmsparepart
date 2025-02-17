@@ -26,7 +26,7 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
-  
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
 
@@ -36,3 +36,8 @@ keycloak:
   admin-cli:
     client-id: admin-cli
     client-secret: AXFGM1Q1ABIVb4tcqkJBZmFX8EdriFJt
+
+cloudinary:
+  cloud_name: dkgkrplvp
+  api_key: 845356959256984
+  api_secret: KY2K-0alMxl_QMXKOOScOgLxqLU
