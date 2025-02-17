@@ -17,8 +17,11 @@ public class GetProductDTO extends AddProductDTO {
                        int stockQuantity,
                        Long categoryId,
                        String categoryName,
-                       List<String> imageUrls) {
-    super(productId, name, description, price, stockQuantity, categoryId, categoryName);
+                       List<String> imageUrls,
+                       String brand,
+                       String manufacturer,
+                       String compatibility) {
+    super(productId, name, description, price, stockQuantity, categoryId, categoryName, brand, manufacturer, compatibility);
     this.imageUrls = imageUrls;
   }
 
