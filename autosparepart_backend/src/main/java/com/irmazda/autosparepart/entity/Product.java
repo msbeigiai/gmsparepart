@@ -36,6 +36,12 @@ public class Product extends BaseEntityCreateUpdate {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
+  private String brand;
+
+  private String manufacturer;
+
+  private String compatibility;
+
   public Product() {
   }
 
@@ -111,4 +117,27 @@ public class Product extends BaseEntityCreateUpdate {
     this.images = images;
   }
 
+  public String getBrand() {
+    return brand;
+  }
+
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+
+  public String getManufacturer() {
+    return manufacturer;
+  }
+
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
+
+  public String getCompatibility() {
+    return compatibility;
+  }
+
+  public void setCompatibility(String compatibility) {
+    this.compatibility = compatibility;
+  }
 }
