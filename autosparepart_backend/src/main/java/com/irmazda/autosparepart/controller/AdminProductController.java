@@ -2,7 +2,8 @@ package com.irmazda.autosparepart.controller;
 
 
 import com.irmazda.autosparepart.dto.product.AddProductDTO;
-import com.irmazda.autosparepart.dto.product.ProductRequest;
+import com.irmazda.autosparepart.dto.product.ProductCreateRequest;
+import com.irmazda.autosparepart.service.AdminProductService;
 import com.irmazda.autosparepart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +21,23 @@ import java.util.UUID;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminProductController {
 
-  private final ProductService productService;
+  private final AdminProductService adminProductService;
 
-  public AdminProductController(ProductService productService) {
-    this.productService = productService;
+  public AdminProductController(AdminProductService adminProductService) {
+    this.adminProductService = adminProductService;
   }
 
-  @PostMapping
-  public ResponseEntity<AddProductDTO> addProduct(@RequestBody ProductRequest pRequestDTO) {
-    return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(productService.addProduct(pRequestDTO));
-  }
+//  @PostMapping
+//  public ResponseEntity<AddProductDTO> addProduct(@RequestBody ProductCreateRequest pRequestDTO) {
+//    return ResponseEntity
+//            .status(HttpStatus.CREATED)
+//            .body(adminProductService.addProduct(pRequestDTO));
+//  }
 
   @PostMapping("/{productId}/upload-images")
   public ResponseEntity<List<String>> uploadImages(@PathVariable UUID productId,
                                                    @RequestParam("files") List<MultipartFile> files) throws IOException {
-    List<String> imageUrls = productService.uploadImages(productId, files);
+    List<String> imageUrls = adminProductService.uploadImages(productId, files);
     return ResponseEntity.created(URI.create("")).body(imageUrls);
   }
 }
