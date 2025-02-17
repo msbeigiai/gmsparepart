@@ -1,7 +1,7 @@
 package com.irmazda.autosparepart.controller;
 
-import com.irmazda.autosparepart.dto.product.ProductDTO;
-import com.irmazda.autosparepart.dto.product.ProductRequest;
+import com.irmazda.autosparepart.dto.product.AddProductDTO;
+import com.irmazda.autosparepart.dto.product.GetProductDTO;
 import com.irmazda.autosparepart.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +20,18 @@ public class ProductController {
     this.productService = productService;
   }
 
-  @PostMapping
-  public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductRequest pRequestDTO) {
-    return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(productService.addProduct(pRequestDTO));
-  }
-
   @GetMapping
-  public ResponseEntity<List<ProductDTO>> getAllProducts() {
+  public ResponseEntity<List<GetProductDTO>> getAllProducts() {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(productService.getAllProducts());
+        .status(HttpStatus.OK)
+        .body(productService.getAllProducts());
   }
 
   @GetMapping("/{productId}")
-  public ResponseEntity<ProductDTO> getProductById(@PathVariable UUID productId) {
+  public ResponseEntity<GetProductDTO> getProductById(@PathVariable UUID productId) {
     return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(productService.getProductById(productId));
+        .status(HttpStatus.OK)
+        .body(productService.getProductById(productId));
   }
 
   @GetMapping("/{categoryId}/count")
@@ -47,12 +40,12 @@ public class ProductController {
   }
 
   @GetMapping("/category/{categoryId}")
-  public ResponseEntity<List<ProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
+  public ResponseEntity<List<AddProductDTO>> getProductsByCategory(@PathVariable Long categoryId) {
     return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
   }
 
   @GetMapping("/categories")
-  public ResponseEntity<List<ProductDTO>> getByCategoryIds(@RequestParam("categoryIds") List<Long> categoryIds) {
+  public ResponseEntity<List<AddProductDTO>> getByCategoryIds(@RequestParam("categoryIds") List<Long> categoryIds) {
     return ResponseEntity.ok(productService.getByCategoryIds(categoryIds));
   }
 
