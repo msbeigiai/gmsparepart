@@ -7,6 +7,9 @@ import Order from "@/components/pages/Order";
 import SampleProductDetails from "@/components/pages/SampleProductDetails";
 import Products from "@/components/Products";
 import { Route, Routes } from "react-router-dom";
+import UploadProductImage from "@/components/UploadProductImage";
+import AdminPage from "@/components/admin/AdminPage";
+import UploadProducts from "@/components/admin/UploadProducts";
 
 const AppRoutes = () => (
   <Routes>
@@ -17,7 +20,9 @@ const AppRoutes = () => (
     <Route path="/products" element={<Products />} />
     <Route path="/orders/:orderId" element={<Order />} />
     <Route path="/checkout" element={<CheckoutStepper />} />
-
+    <Route path="/upload-images" element={<UploadProductImage />} />
+    <Route path="/admin" element={<AdminPage />} />
+    <Route path="/upload-products" element={<UploadProducts />} />
     {/* <Route path="*" element={<NotFound />} /> */}
   </Routes>
 );

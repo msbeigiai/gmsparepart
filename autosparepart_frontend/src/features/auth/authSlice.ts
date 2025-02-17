@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "../../app/store";
 import Keycloak from "keycloak-js";
+import { User } from "@/types";
 
 interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
   refreshToken: string | null;
-  user: Keycloak.KeycloakTokenParsed | null;
+  user: User | null;
   tokenExpiresAt: number | null;
 }
 
@@ -29,7 +30,7 @@ const authSlice = createSlice({
       action: PayloadAction<{
         token: string;
         refreshToken: string;
-        user: Keycloak.KeycloakTokenParsed;
+        user: User;
         expiresIn: number;
       }>
     ) => {
@@ -85,7 +86,7 @@ export const refreshTokenIfNeeded =
 
     if (tokenExpiresAt && Date.now() + 60000 > tokenExpiresAt) {
       try {
-        const refreshed = await keycloak.updateToken(30); // حداقل ۳۰ ثانیه اعتبار درخواست میکند
+        const refreshed = await keycloak.updateToken(30);
 
         if (refreshed) {
           dispatch(
@@ -110,8 +111,8 @@ export const initializeKeycloak = async () => {
       onLoad: "check-sso",
       silentCheckSsoRedirectUri:
         window.location.origin + "/silent-check-sso.html",
-      checkLoginIframe: false, // Important for better reliability
-      enableLogging: true, // Helpful for debugging
+      checkLoginIframe: false,
+      enableLogging: true,
       pkceMethod: "S256",
     });
 

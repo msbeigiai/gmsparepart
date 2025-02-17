@@ -1,4 +1,4 @@
-import { Calendar, Home, Search, Settings, ShoppingBag } from "lucide-react"
+import { ShoppingBag, Upload } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,36 +9,21 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 // Menu items.
 const items = [
   {
     title: "All Products",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Card",
-    url: "#",
+    url: "/admin",
     icon: ShoppingBag,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Upload Product",
+    url: "/upload-products",
+    icon: Upload,
   },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "About us",
-    url: "/about",
-    icon: Settings,
-  },
-]
+];
 
 export function AppSidebar() {
   return (
@@ -47,7 +32,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="mt-14">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -63,8 +48,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
 
-
-export default AppSidebar
+export default AppSidebar;
