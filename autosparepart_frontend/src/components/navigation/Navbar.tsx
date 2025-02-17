@@ -2,11 +2,11 @@ import { useAppSelector } from "@/app/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { keycloak } from "@/features/auth/authSlice";
-import { cn } from "@/lib/utils";
 import { Menu, Search, ShoppingCart, User } from "lucide-react";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserStatusHover from "../UserStatusHover";
+import { SidebarTrigger } from "../ui/sidebar";
 
 const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -18,11 +18,13 @@ const Navbar: React.FC = () => {
     keycloak.login();
   };
 
+  console.log("USER: ", user);
+
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <nav className={cn("bg-card text-card-foreground shadow-md")}>
-      <div className="container mx-auto px-4 flex justify-between items-center h-20">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-card text-card-foreground shadow-md">
+      <div className="px-4 mx-auto flex justify-between items-center h-20">
         {/* Left: Logo */}
         <Link to="/" className="text-xl font-bold">
           MazPARTS
@@ -39,6 +41,16 @@ const Navbar: React.FC = () => {
           <Link to="/contact" className="hover:text-primary">
             Contact
           </Link>
+          <Link to="/upload-images" className="hover:text-primary">
+            Upload Images
+          </Link>
+          {user && user.realm_access?.roles?.includes("ADMIN", 0) ? (
+            <Link to="/admin" className="hover:text-primary">
+              Admin
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
 
         {/* Right: Action Icons */}

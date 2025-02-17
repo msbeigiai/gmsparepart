@@ -1,8 +1,8 @@
 import { useAppSelector } from "@/app/hooks";
+import heroImage from "@/assets/heo-image.jpg";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import heroImage from "@/assets/heo-image.jpg";
 import {
   Carousel,
   CarouselContent,
@@ -18,9 +18,7 @@ import {
   Star,
   Truck,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import Products from "../Products";
+import { Link, useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -156,7 +154,7 @@ const LandingPage = () => {
                   <Card className="m-1">
                     <CardContent className="p-0">
                       <img
-                        src={product.image}
+                        src={product.imageUrls[0]}
                         alt={product.name}
                         className="w-full h-48 object-cover"
                       />
