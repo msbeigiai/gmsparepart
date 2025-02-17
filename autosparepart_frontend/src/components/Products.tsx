@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { getAllCategories } from "@/features/category/categorySlice";
 import { fetchProducts } from "@/features/products/productsSlice";
-import { Loader, LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useEffect } from "react";
 import ProductCard from "./ProductCard";
 import CategorySidebar from "./pages/CategorySidebar";
