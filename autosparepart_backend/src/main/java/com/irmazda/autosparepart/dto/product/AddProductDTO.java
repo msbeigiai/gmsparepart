@@ -3,7 +3,7 @@ package com.irmazda.autosparepart.dto.product;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class ProductDTO {
+public class AddProductDTO {
 
   private UUID productId;
   private String name;
@@ -12,18 +12,23 @@ public class ProductDTO {
   private int stockQuantity;
   private Long categoryId;
   private String categoryName;
-  private String image;
+  private String brand;
+  private String manufacturer;
+  private String compatibility;
 
-  public ProductDTO() {
+  public AddProductDTO() {
   }
 
-  public ProductDTO(UUID productId,
-                    String name,
-                    String description,
-                    BigDecimal price,
-                    int stockQuantity,
-                    Long categoryId, String categoryName,
-                    String image) {
+  public AddProductDTO(UUID productId,
+                       String name,
+                       String description,
+                       BigDecimal price,
+                       int stockQuantity,
+                       Long categoryId,
+                       String categoryName,
+                       String brand,
+                       String manufacturer,
+                       String compatibility) {
     this.productId = productId;
     this.name = name;
     this.description = description;
@@ -31,7 +36,9 @@ public class ProductDTO {
     this.stockQuantity = stockQuantity;
     this.categoryId = categoryId;
     this.categoryName = categoryName;
-    this.image = image;
+    this.brand = brand;
+    this.manufacturer = manufacturer;
+    this.compatibility = compatibility;
   }
 
   public String getName() {
@@ -82,19 +89,35 @@ public class ProductDTO {
     this.productId = productId;
   }
 
-  public String getImage() {
-    return image;
-  }
-
-  public void setImage(String image) {
-    this.image = image;
-  }
-
   public String getCategoryName() {
     return categoryName;
   }
 
   public void setCategoryName(String categoryName) {
     this.categoryName = categoryName;
+  }
+
+  public String getBrand() {
+    return brand;
+  }
+
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+
+  public String getManufacturer() {
+    return manufacturer;
+  }
+
+  public void setManufacturer(String manufacturer) {
+    this.manufacturer = manufacturer;
+  }
+
+  public String getCompatibility() {
+    return compatibility;
+  }
+
+  public void setCompatibility(String compatibility) {
+    this.compatibility = compatibility;
   }
 }
