@@ -16,13 +16,6 @@ import { Link } from "react-router-dom";
 import ProfileAddressesList from "../ProfileAddressesList";
 import ProfileOrdersList from "../ProfileOrdersList";
 
-// export enum OrderStatus {
-//   COMPLETED = "COMPLETED",
-//   PENDING = "PENDING",
-//   DELIVERED = "DELIVERED",
-//   PROCESSING = "PROCESSING",
-// }
-
 const EcommerceProfile = () => {
   const dispatch = useAppDispatch();
   const { items: addresses } = useAppSelector((state) => state.addresses);
@@ -44,7 +37,7 @@ const EcommerceProfile = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center w-full">
         <Card className="w-full sm:w-96">
           <CardContent className="p-6">
             <h1 className="text-2xl font-bold mb-4">Please Sign In</h1>
@@ -59,7 +52,7 @@ const EcommerceProfile = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-300 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-300 to-indigo-100 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Profile Summary */}
         <Card className="mb-6">
