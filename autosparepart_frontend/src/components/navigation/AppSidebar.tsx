@@ -20,7 +20,7 @@ const items = [
   },
   {
     title: "Upload Product",
-    url: "/upload-products",
+    url: "/admin/upload-products",
     icon: Upload,
   },
 ];
