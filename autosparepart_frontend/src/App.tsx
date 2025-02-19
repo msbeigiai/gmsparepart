@@ -17,7 +17,7 @@ import Cookies from "js-cookie";
 function App() {
   const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
-  const defaultOpen = Cookies.get("sidebar_state")?.value === "true";
+  const defaultOpen = Cookies.get("sidebar_state") === "true";
 
   const refreshToken = useCallback(async () => {
     try {
