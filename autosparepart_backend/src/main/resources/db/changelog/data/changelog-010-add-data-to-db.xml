@@ -72,6 +72,7 @@
       <column name="price" value="15.99" />
       <column name="stock_quantity" value="150" />
       <column name="category_id" value="1" />
+      <column name="sku" value="OIL_FILTER_001" />
     </insert>
 
     <insert tableName="products">
@@ -81,6 +82,7 @@
       <column name="price" value="89.50" />
       <column name="stock_quantity" value="75" />
       <column name="category_id" value="2" />
+      <column name="sku" value="SHOCK_ABSORBER_001" />
     </insert>
 
     <insert tableName="products">
@@ -90,6 +92,7 @@
       <column name="price" value="45.00" />
       <column name="stock_quantity" value="120" />
       <column name="category_id" value="3" />
+      <column name="sku" value="BREAK_PADS_SET_001" />
     </insert>
 
     <!-- Mock Data for Product Images -->

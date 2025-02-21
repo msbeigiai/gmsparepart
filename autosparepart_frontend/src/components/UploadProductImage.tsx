@@ -37,7 +37,7 @@ const UploadProductImage = () => {
   };
 
   return (
-    <div>
+    <div className="bg-slate-200 w-full p-3">
       <h3>Upload Product Images</h3>
       <input
         title="upload-product"

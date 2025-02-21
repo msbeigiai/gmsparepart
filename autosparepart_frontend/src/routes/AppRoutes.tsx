@@ -22,7 +22,7 @@ const AppRoutes = () => (
     <Route path="/checkout" element={<CheckoutStepper />} />
     <Route path="/upload-images" element={<UploadProductImage />} />
     <Route path="/admin" element={<AdminPage />} />
-    <Route path="/upload-products" element={<UploadProducts />} />
+    <Route path="/admin/upload-products" element={<UploadProducts />} />
     {/* <Route path="*" element={<NotFound />} /> */}
   </Routes>
 );

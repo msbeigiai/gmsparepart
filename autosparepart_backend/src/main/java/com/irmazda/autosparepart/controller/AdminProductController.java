@@ -1,11 +1,8 @@
 package com.irmazda.autosparepart.controller;
 
 
-import com.irmazda.autosparepart.dto.product.AddProductDTO;
-import com.irmazda.autosparepart.dto.product.ProductCreateRequest;
+import com.irmazda.autosparepart.dto.product.BulkImportResponse;
 import com.irmazda.autosparepart.service.AdminProductService;
-import com.irmazda.autosparepart.service.ProductService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +30,11 @@ public class AdminProductController {
 //            .status(HttpStatus.CREATED)
 //            .body(adminProductService.addProduct(pRequestDTO));
 //  }
+
+  @PostMapping("/import")
+  public ResponseEntity<BulkImportResponse> importProducts(@RequestParam("file") MultipartFile file) {
+    return ResponseEntity.ok(adminProductService.importProductsFromExcel(file));
+  }
 
   @PostMapping("/{productId}/upload-images")
   public ResponseEntity<List<String>> uploadImages(@PathVariable UUID productId,

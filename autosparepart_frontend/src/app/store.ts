@@ -9,6 +9,7 @@ import favoriteReducer from "../features/favorite/favoriteSlice";
 import categoryReducer from "../features/category/categorySlice";
 import userReducer from "../features/user/userSlice";
 import orderReducer from "../features/order/orderSlice";
+import uploadReducer from "../features/products/uploadSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     categories: categoryReducer,
     users: userReducer,
     order: orderReducer,
+    upload: uploadReducer,
   },
 });
 

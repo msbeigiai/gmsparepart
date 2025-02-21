@@ -41,3 +41,5 @@ cloudinary:
   cloud_name: dkgkrplvp
   api_key: 845356959256984
   api_secret: KY2K-0alMxl_QMXKOOScOgLxqLU
+  upload:
+    preset: irmazda

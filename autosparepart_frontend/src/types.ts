@@ -1,25 +1,32 @@
 export const API_BASE_URL = "http://localhost:8081/api/v1";
+export const API_ADMIN_BASE_URL = "http://localhost:8081/api/v1/admin";
 
 export interface Product {
   productId: string;
   name: string;
   price: number;
   description: string;
-  image: string;
+  imageUrls: string | string[];
+  defaultImage: string;
   categoryId: number;
   categoryName: string;
   stockQuantity: number;
+  brand: string;
+  manufacturer: string;
+  compatibility: string;
+}
+
+export interface LocalProduct {
+  productId: string;
+  name: string;
+  price: number;
+  defaultImage: string;
 }
 
 export interface LocalCartItem {
   productId: string;
   quantity: number;
-  product: {
-    productId: string;
-    name: string;
-    price: number;
-    image: string;
-  };
+  product: LocalProduct;
 }
 
 export interface CartItem {
@@ -102,4 +109,22 @@ export interface Order {
   deliveryAddress: string;
   totalOrderAmount: number;
   orderItemDTOS: OrderItem[];
+}
+
+// export type Role = "ADMIN" | "CUSTOMER";
+
+// export interface User {
+//   given_name: string;
+//   family_name: string;
+//   name: string;
+//   preferred_username: string;
+//   roles: Role[];
+// }
+
+export type User = Keycloak.KeycloakTokenParsed;
+
+export interface UploadResponse {
+  successCount: number[];
+  errorCount: number[];
+  errors: string[];
 }

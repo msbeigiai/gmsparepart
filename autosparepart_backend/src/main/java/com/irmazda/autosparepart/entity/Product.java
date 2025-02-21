@@ -36,6 +36,9 @@ public class Product extends BaseEntityCreateUpdate {
   @Column(name = "stock_quantity", nullable = false)
   private int stockQuantity;
 
+  @Column(name = "sku", nullable = false)
+  private String SKU;
+
   private String brand;
 
   private String manufacturer;
@@ -49,15 +52,16 @@ public class Product extends BaseEntityCreateUpdate {
     this.productId = productId;
   }
 
-  public Product(String name, String description, BigDecimal price, int stockQuantity) {
+  public Product(String name, String description, BigDecimal price, int stockQuantity, String sku) {
     this.name = name;
     this.description = description;
     this.price = price;
     this.stockQuantity = stockQuantity;
+    SKU = sku;
   }
 
   public void addImage(ProductImage image) {
-    image.setProduct(this);  // Ensure bidirectional linkage
+    image.setProduct(this);
     this.images.add(image);
   }
 
@@ -139,5 +143,13 @@ public class Product extends BaseEntityCreateUpdate {
 
   public void setCompatibility(String compatibility) {
     this.compatibility = compatibility;
+  }
+
+  public String getSKU() {
+    return SKU;
+  }
+
+  public void setSKU(String SKU) {
+    this.SKU = SKU;
   }
 }

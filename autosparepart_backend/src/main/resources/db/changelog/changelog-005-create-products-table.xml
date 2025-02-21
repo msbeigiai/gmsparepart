@@ -16,6 +16,9 @@
       <column name="name" type="VARCHAR(100)">
         <constraints nullable="false" />
       </column>
+      <column name="sku" type="VARCHAR(100)">
+        <constraints nullable="false" />
+     </column>
       <column name="brand" type="VARCHAR(100)" />
       <column name="manufacturer" type="VARCHAR(100)" />
       <column name="compatibility" type="VARCHAR(255)" />
