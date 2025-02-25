@@ -33,4 +33,4 @@ build/
 ### VS Code ###
 .vscode/
 
-**/src/main/resources/*.yml
+autosparepart_backend/src/main/resources/application.yml 
