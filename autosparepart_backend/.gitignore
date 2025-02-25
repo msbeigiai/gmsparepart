@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resourcse/*.yml
+src/main/resources/*.yml
