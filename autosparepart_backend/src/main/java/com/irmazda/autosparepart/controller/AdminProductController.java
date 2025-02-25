@@ -42,4 +42,12 @@ public class AdminProductController {
     List<String> imageUrls = adminProductService.uploadImages(productId, files);
     return ResponseEntity.created(URI.create("")).body(imageUrls);
   }
+
+  @PostMapping("/bulk-import")
+  public ResponseEntity<BulkImportResponse> importProductsWithImages(@RequestParam("excel") MultipartFile excelFile,
+                                                                     @RequestParam("images") List<MultipartFile> imageFiles) {
+    BulkImportResponse response = adminProductService.importProductsWithImages(excelFile, imageFiles);
+    return ResponseEntity.ok(response);
+  }
 }
+
