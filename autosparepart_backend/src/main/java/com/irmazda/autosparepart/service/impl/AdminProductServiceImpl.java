@@ -1,11 +1,13 @@
 package com.irmazda.autosparepart.service.impl;
 
+import com.cloudinary.Cloudinary;
 import com.irmazda.autosparepart.dto.product.AddProductDTO;
 import com.irmazda.autosparepart.dto.product.BulkImportResponse;
 import com.irmazda.autosparepart.dto.product.ProductCreateRequest;
 import com.irmazda.autosparepart.entity.Category;
 import com.irmazda.autosparepart.entity.Product;
 import com.irmazda.autosparepart.entity.ProductImage;
+import com.irmazda.autosparepart.exceptions.errors.ProductImageError;
 import com.irmazda.autosparepart.exceptions.errors.ProductImportError;
 import com.irmazda.autosparepart.maps.ProductMapper;
 import com.irmazda.autosparepart.repository.CategoryRepository;
@@ -13,41 +15,42 @@ import com.irmazda.autosparepart.repository.ProductImageRepository;
 import com.irmazda.autosparepart.repository.ProductRepository;
 import com.irmazda.autosparepart.service.AdminProductService;
 import com.irmazda.autosparepart.service.CloudinaryService;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.commons.collections4.map.HashedMap;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AdminProductServiceImpl implements AdminProductService {
+
+    @Value("${cloudinary.upload.preset}")
+    private String uploadPreset;
 
     private final ProductRepository productRepository;
     private final CloudinaryService cloudinaryService;
     private final ProductImageRepository productImageRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final Cloudinary cloudinary;
 
     public AdminProductServiceImpl(ProductRepository productRepository,
                                    CloudinaryService cloudinaryService,
                                    ProductImageRepository productImageRepository,
                                    CategoryRepository categoryRepository,
-                                   ProductMapper productMapper) {
+                                   ProductMapper productMapper, Cloudinary cloudinary) {
         this.productRepository = productRepository;
         this.cloudinaryService = cloudinaryService;
         this.productImageRepository = productImageRepository;
         this.categoryRepository = categoryRepository;
         this.productMapper = productMapper;
+        this.cloudinary = cloudinary;
     }
 
     @Override
@@ -68,6 +71,53 @@ public class AdminProductServiceImpl implements AdminProductService {
         product.getImages().addAll(images);
         productRepository.save(product);
         return imageUrls;
+    }
+
+    @Transactional
+    public BulkImportResponse importProductsWithImages(MultipartFile excelFile, List<MultipartFile> imageFiles) {
+        Map<String, String> uploadedImages = new HashMap<>();
+        List<ProductImportError> errors = new ArrayList<>();
+        List<Product> successfulImports = new ArrayList<>();
+
+        try {
+            uploadedImages = batchUploadImages(imageFiles);
+
+            processExcelWithImages(excelFile, uploadedImages, successfulImports, errors);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to process import", e);
+        }
+
+        return new BulkImportResponse(
+                successfulImports.size(),
+                errors.size(),
+                errors
+        );
+
+    }
+
+    private Map<String, String> batchUploadImages(List<MultipartFile> imageFiles) throws IOException {
+        Map<String, String> uploadedUrls = new HashMap<>();
+
+        for (var imageFile : imageFiles) {
+            var originalFileName = imageFile.getOriginalFilename();
+            var identifier = extractIdentifier(Objects.requireNonNull(originalFileName));
+
+            try {
+                Map<String, String> uploadParams = new HashMap<>();
+
+                uploadParams.put("upload_preset", uploadPreset);
+                uploadParams.put("folder", "products");
+
+                Map uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), uploadParams);
+                uploadedUrls.put(identifier, (String) uploadResult.get("secure_url"));
+
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload image: " + originalFileName, e);
+            }
+        }
+
+        return uploadedUrls;
     }
 
     @Override
@@ -114,6 +164,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     @Override
+    @Transactional
     public AddProductDTO addProduct(ProductCreateRequest productCreateRequest) {
         Category category = categoryRepository.findById(productCreateRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found!"));
@@ -170,18 +221,15 @@ public class AdminProductServiceImpl implements AdminProductService {
     private String getCellValue(Cell cell) {
         if (cell == null) return "";
 
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue().trim();
-            case NUMERIC:
-                return String.valueOf((int) cell.getNumericCellValue());
-            default:
-                return "";
-        }
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue().trim();
+            case NUMERIC -> String.valueOf((int) cell.getNumericCellValue());
+            default -> "";
+        };
     }
 
     private Product createProductFromRow(Row row) {
-        Category category = categoryRepository.findByName(row.getCell(8).getStringCellValue() )
+        Category category = categoryRepository.findByName(row.getCell(8).getStringCellValue())
                 .orElseThrow(() -> new RuntimeException("Category not found!"));
 
         Product product = new Product();
@@ -189,13 +237,21 @@ public class AdminProductServiceImpl implements AdminProductService {
         product.setCategory(category);
         product.setDescription(row.getCell(2).getStringCellValue());
         product.setName(row.getCell(1).getStringCellValue());
-        product.setPrice(BigDecimal.valueOf(Long.parseLong(row.getCell(3).getStringCellValue())));
-        product.setStockQuantity(Integer.parseInt(row.getCell(4).getStringCellValue()));
+        product.setPrice(getValue(row.getCell(3)));
+        product.setStockQuantity(getValue(row.getCell(4)).intValue());
         product.setBrand(row.getCell(5).getStringCellValue());
         product.setManufacturer(row.getCell(6).getStringCellValue());
         product.setCompatibility(row.getCell(7).getStringCellValue());
 
         return productRepository.save(product);
+    }
+
+    private BigDecimal getValue(Cell cell) {
+        return switch (cell.getCellType()) {
+            case NUMERIC -> BigDecimal.valueOf(cell.getNumericCellValue());
+            case STRING -> new BigDecimal(cell.getStringCellValue());
+            default -> throw new IllegalStateException("Unexpected value: " + cell.getCellType());
+        };
     }
 
 }

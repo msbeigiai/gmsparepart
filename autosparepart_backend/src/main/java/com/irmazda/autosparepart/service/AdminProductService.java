@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface AdminProductService {
-  List<String> uploadImages(UUID productId, List<MultipartFile> files) throws IOException;
-  BulkImportResponse importProductsFromExcel(MultipartFile file);
-  AddProductDTO addProduct(ProductCreateRequest productCreateRequestDTO);
-
+   List<String> uploadImages(UUID productId, List<MultipartFile> files) throws IOException;
+   BulkImportResponse importProductsWithImages(MultipartFile excelFile, List<MultipartFile> imageFiles); 
+   BulkImportResponse importProductsFromExcel(MultipartFile file);
+   AddProductDTO addProduct(ProductCreateRequest productCreateRequestDTO);
 }
